@@ -1,0 +1,8 @@
+mutation ChangeUsersOrder($upperId: Int!, $lowerId: Int!) {
+    upper: update_users_by_pk(pk_columns: { id: $upperId }, _inc: { position: 1 }) {
+        id
+    }
+    lower: update_users_by_pk(pk_columns: { id: $lowerId }, _inc: { position: -1 }) {
+        id
+    }
+}

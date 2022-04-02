@@ -1,0 +1,5 @@
+mutation DeleteTsuke($id: Int!) {
+    delete_tsukes_by_pk(id: $id) {
+        id
+    }
+}

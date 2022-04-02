@@ -1,0 +1,7 @@
+mutation CreateUser($name: String!, $slackId: String, $position: Int!) {
+    insert_users_one(
+        object: { name: $name, slack_id: $slackId, position: $position }
+    ) {
+        id
+    }
+}

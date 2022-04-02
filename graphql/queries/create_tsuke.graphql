@@ -1,0 +1,7 @@
+mutation CreateTsuke($date: date!, $fromUserId: Int!, $toUserId: Int!, $amount: Int!, $description: String!) {
+    insert_tsukes_one(
+        object: { date: $date, from_user_id: $fromUserId, to_user_id: $toUserId, amount: $amount, description: $description }
+    ) {
+        id
+    }
+}

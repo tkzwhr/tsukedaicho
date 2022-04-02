@@ -1,0 +1,924 @@
+schema {
+  query: query_root
+  mutation: mutation_root
+  subscription: subscription_root
+}
+
+"""whether this query should be cached (Hasura Cloud only)"""
+directive @cached(
+  """measured in seconds"""
+  ttl: Int! = 60
+
+  """refresh the cache entry"""
+  refresh: Boolean! = false
+) on QUERY
+
+"""
+Boolean expression to compare columns of type "Int". All fields are combined with logical 'AND'.
+"""
+input Int_comparison_exp {
+  _eq: Int
+  _gt: Int
+  _gte: Int
+  _in: [Int!]
+  _is_null: Boolean
+  _lt: Int
+  _lte: Int
+  _neq: Int
+  _nin: [Int!]
+}
+
+"""
+Boolean expression to compare columns of type "String". All fields are combined with logical 'AND'.
+"""
+input String_comparison_exp {
+  _eq: String
+  _gt: String
+  _gte: String
+
+  """does the column match the given case-insensitive pattern"""
+  _ilike: String
+  _in: [String!]
+
+  """
+  does the column match the given POSIX regular expression, case insensitive
+  """
+  _iregex: String
+  _is_null: Boolean
+
+  """does the column match the given pattern"""
+  _like: String
+  _lt: String
+  _lte: String
+  _neq: String
+
+  """does the column NOT match the given case-insensitive pattern"""
+  _nilike: String
+  _nin: [String!]
+
+  """
+  does the column NOT match the given POSIX regular expression, case insensitive
+  """
+  _niregex: String
+
+  """does the column NOT match the given pattern"""
+  _nlike: String
+
+  """
+  does the column NOT match the given POSIX regular expression, case sensitive
+  """
+  _nregex: String
+
+  """does the column NOT match the given SQL regular expression"""
+  _nsimilar: String
+
+  """
+  does the column match the given POSIX regular expression, case sensitive
+  """
+  _regex: String
+
+  """does the column match the given SQL regular expression"""
+  _similar: String
+}
+
+scalar date
+
+"""
+Boolean expression to compare columns of type "date". All fields are combined with logical 'AND'.
+"""
+input date_comparison_exp {
+  _eq: date
+  _gt: date
+  _gte: date
+  _in: [date!]
+  _is_null: Boolean
+  _lt: date
+  _lte: date
+  _neq: date
+  _nin: [date!]
+}
+
+"""mutation root"""
+type mutation_root {
+  """
+  delete data from the table: "tsukes"
+  """
+  delete_tsukes(
+    """filter the rows which have to be deleted"""
+    where: tsukes_bool_exp!
+  ): tsukes_mutation_response
+
+  """
+  delete single row from the table: "tsukes"
+  """
+  delete_tsukes_by_pk(id: Int!): tsukes
+
+  """
+  delete data from the table: "users"
+  """
+  delete_users(
+    """filter the rows which have to be deleted"""
+    where: users_bool_exp!
+  ): users_mutation_response
+
+  """
+  delete single row from the table: "users"
+  """
+  delete_users_by_pk(id: Int!): users
+
+  """
+  insert data into the table: "tsukes"
+  """
+  insert_tsukes(
+    """the rows to be inserted"""
+    objects: [tsukes_insert_input!]!
+
+    """upsert condition"""
+    on_conflict: tsukes_on_conflict
+  ): tsukes_mutation_response
+
+  """
+  insert a single row into the table: "tsukes"
+  """
+  insert_tsukes_one(
+    """the row to be inserted"""
+    object: tsukes_insert_input!
+
+    """upsert condition"""
+    on_conflict: tsukes_on_conflict
+  ): tsukes
+
+  """
+  insert data into the table: "users"
+  """
+  insert_users(
+    """the rows to be inserted"""
+    objects: [users_insert_input!]!
+
+    """upsert condition"""
+    on_conflict: users_on_conflict
+  ): users_mutation_response
+
+  """
+  insert a single row into the table: "users"
+  """
+  insert_users_one(
+    """the row to be inserted"""
+    object: users_insert_input!
+
+    """upsert condition"""
+    on_conflict: users_on_conflict
+  ): users
+
+  """
+  update data of the table: "tsukes"
+  """
+  update_tsukes(
+    """increments the numeric columns with given value of the filtered values"""
+    _inc: tsukes_inc_input
+
+    """sets the columns of the filtered rows to the given values"""
+    _set: tsukes_set_input
+
+    """filter the rows which have to be updated"""
+    where: tsukes_bool_exp!
+  ): tsukes_mutation_response
+
+  """
+  update single row of the table: "tsukes"
+  """
+  update_tsukes_by_pk(
+    """increments the numeric columns with given value of the filtered values"""
+    _inc: tsukes_inc_input
+
+    """sets the columns of the filtered rows to the given values"""
+    _set: tsukes_set_input
+    pk_columns: tsukes_pk_columns_input!
+  ): tsukes
+
+  """
+  update data of the table: "users"
+  """
+  update_users(
+    """increments the numeric columns with given value of the filtered values"""
+    _inc: users_inc_input
+
+    """sets the columns of the filtered rows to the given values"""
+    _set: users_set_input
+
+    """filter the rows which have to be updated"""
+    where: users_bool_exp!
+  ): users_mutation_response
+
+  """
+  update single row of the table: "users"
+  """
+  update_users_by_pk(
+    """increments the numeric columns with given value of the filtered values"""
+    _inc: users_inc_input
+
+    """sets the columns of the filtered rows to the given values"""
+    _set: users_set_input
+    pk_columns: users_pk_columns_input!
+  ): users
+}
+
+"""column ordering options"""
+enum order_by {
+  """in ascending order, nulls last"""
+  asc
+
+  """in ascending order, nulls first"""
+  asc_nulls_first
+
+  """in ascending order, nulls last"""
+  asc_nulls_last
+
+  """in descending order, nulls first"""
+  desc
+
+  """in descending order, nulls first"""
+  desc_nulls_first
+
+  """in descending order, nulls last"""
+  desc_nulls_last
+}
+
+type query_root {
+  """
+  fetch data from the table: "tsukes"
+  """
+  tsukes(
+    """distinct select on columns"""
+    distinct_on: [tsukes_select_column!]
+
+    """limit the number of rows returned"""
+    limit: Int
+
+    """skip the first n rows. Use only with order_by"""
+    offset: Int
+
+    """sort the rows by one or more columns"""
+    order_by: [tsukes_order_by!]
+
+    """filter the rows returned"""
+    where: tsukes_bool_exp
+  ): [tsukes!]!
+
+  """
+  fetch aggregated fields from the table: "tsukes"
+  """
+  tsukes_aggregate(
+    """distinct select on columns"""
+    distinct_on: [tsukes_select_column!]
+
+    """limit the number of rows returned"""
+    limit: Int
+
+    """skip the first n rows. Use only with order_by"""
+    offset: Int
+
+    """sort the rows by one or more columns"""
+    order_by: [tsukes_order_by!]
+
+    """filter the rows returned"""
+    where: tsukes_bool_exp
+  ): tsukes_aggregate!
+
+  """fetch data from the table: "tsukes" using primary key columns"""
+  tsukes_by_pk(id: Int!): tsukes
+
+  """
+  fetch data from the table: "users"
+  """
+  users(
+    """distinct select on columns"""
+    distinct_on: [users_select_column!]
+
+    """limit the number of rows returned"""
+    limit: Int
+
+    """skip the first n rows. Use only with order_by"""
+    offset: Int
+
+    """sort the rows by one or more columns"""
+    order_by: [users_order_by!]
+
+    """filter the rows returned"""
+    where: users_bool_exp
+  ): [users!]!
+
+  """
+  fetch aggregated fields from the table: "users"
+  """
+  users_aggregate(
+    """distinct select on columns"""
+    distinct_on: [users_select_column!]
+
+    """limit the number of rows returned"""
+    limit: Int
+
+    """skip the first n rows. Use only with order_by"""
+    offset: Int
+
+    """sort the rows by one or more columns"""
+    order_by: [users_order_by!]
+
+    """filter the rows returned"""
+    where: users_bool_exp
+  ): users_aggregate!
+
+  """fetch data from the table: "users" using primary key columns"""
+  users_by_pk(id: Int!): users
+}
+
+type subscription_root {
+  """
+  fetch data from the table: "tsukes"
+  """
+  tsukes(
+    """distinct select on columns"""
+    distinct_on: [tsukes_select_column!]
+
+    """limit the number of rows returned"""
+    limit: Int
+
+    """skip the first n rows. Use only with order_by"""
+    offset: Int
+
+    """sort the rows by one or more columns"""
+    order_by: [tsukes_order_by!]
+
+    """filter the rows returned"""
+    where: tsukes_bool_exp
+  ): [tsukes!]!
+
+  """
+  fetch aggregated fields from the table: "tsukes"
+  """
+  tsukes_aggregate(
+    """distinct select on columns"""
+    distinct_on: [tsukes_select_column!]
+
+    """limit the number of rows returned"""
+    limit: Int
+
+    """skip the first n rows. Use only with order_by"""
+    offset: Int
+
+    """sort the rows by one or more columns"""
+    order_by: [tsukes_order_by!]
+
+    """filter the rows returned"""
+    where: tsukes_bool_exp
+  ): tsukes_aggregate!
+
+  """fetch data from the table: "tsukes" using primary key columns"""
+  tsukes_by_pk(id: Int!): tsukes
+
+  """
+  fetch data from the table: "users"
+  """
+  users(
+    """distinct select on columns"""
+    distinct_on: [users_select_column!]
+
+    """limit the number of rows returned"""
+    limit: Int
+
+    """skip the first n rows. Use only with order_by"""
+    offset: Int
+
+    """sort the rows by one or more columns"""
+    order_by: [users_order_by!]
+
+    """filter the rows returned"""
+    where: users_bool_exp
+  ): [users!]!
+
+  """
+  fetch aggregated fields from the table: "users"
+  """
+  users_aggregate(
+    """distinct select on columns"""
+    distinct_on: [users_select_column!]
+
+    """limit the number of rows returned"""
+    limit: Int
+
+    """skip the first n rows. Use only with order_by"""
+    offset: Int
+
+    """sort the rows by one or more columns"""
+    order_by: [users_order_by!]
+
+    """filter the rows returned"""
+    where: users_bool_exp
+  ): users_aggregate!
+
+  """fetch data from the table: "users" using primary key columns"""
+  users_by_pk(id: Int!): users
+}
+
+"""
+columns and relationships of "tsukes"
+"""
+type tsukes {
+  amount: Int!
+  date: date!
+  description: String!
+
+  """An object relationship"""
+  from_user: users!
+  from_user_id: Int!
+  id: Int!
+
+  """An object relationship"""
+  to_user: users!
+  to_user_id: Int!
+}
+
+"""
+aggregated selection of "tsukes"
+"""
+type tsukes_aggregate {
+  aggregate: tsukes_aggregate_fields
+  nodes: [tsukes!]!
+}
+
+"""
+aggregate fields of "tsukes"
+"""
+type tsukes_aggregate_fields {
+  avg: tsukes_avg_fields
+  count(columns: [tsukes_select_column!], distinct: Boolean): Int!
+  max: tsukes_max_fields
+  min: tsukes_min_fields
+  stddev: tsukes_stddev_fields
+  stddev_pop: tsukes_stddev_pop_fields
+  stddev_samp: tsukes_stddev_samp_fields
+  sum: tsukes_sum_fields
+  var_pop: tsukes_var_pop_fields
+  var_samp: tsukes_var_samp_fields
+  variance: tsukes_variance_fields
+}
+
+"""aggregate avg on columns"""
+type tsukes_avg_fields {
+  amount: Float
+  from_user_id: Float
+  id: Float
+  to_user_id: Float
+}
+
+"""
+Boolean expression to filter rows from the table "tsukes". All fields are combined with a logical 'AND'.
+"""
+input tsukes_bool_exp {
+  _and: [tsukes_bool_exp!]
+  _not: tsukes_bool_exp
+  _or: [tsukes_bool_exp!]
+  amount: Int_comparison_exp
+  date: date_comparison_exp
+  description: String_comparison_exp
+  from_user: users_bool_exp
+  from_user_id: Int_comparison_exp
+  id: Int_comparison_exp
+  to_user: users_bool_exp
+  to_user_id: Int_comparison_exp
+}
+
+"""
+unique or primary key constraints on table "tsukes"
+"""
+enum tsukes_constraint {
+  """unique or primary key constraint"""
+  tsukes_pk
+}
+
+"""
+input type for incrementing numeric columns in table "tsukes"
+"""
+input tsukes_inc_input {
+  amount: Int
+  from_user_id: Int
+  id: Int
+  to_user_id: Int
+}
+
+"""
+input type for inserting data into table "tsukes"
+"""
+input tsukes_insert_input {
+  amount: Int
+  date: date
+  description: String
+  from_user: users_obj_rel_insert_input
+  from_user_id: Int
+  id: Int
+  to_user: users_obj_rel_insert_input
+  to_user_id: Int
+}
+
+"""aggregate max on columns"""
+type tsukes_max_fields {
+  amount: Int
+  date: date
+  description: String
+  from_user_id: Int
+  id: Int
+  to_user_id: Int
+}
+
+"""aggregate min on columns"""
+type tsukes_min_fields {
+  amount: Int
+  date: date
+  description: String
+  from_user_id: Int
+  id: Int
+  to_user_id: Int
+}
+
+"""
+response of any mutation on the table "tsukes"
+"""
+type tsukes_mutation_response {
+  """number of rows affected by the mutation"""
+  affected_rows: Int!
+
+  """data from the rows affected by the mutation"""
+  returning: [tsukes!]!
+}
+
+"""
+on_conflict condition type for table "tsukes"
+"""
+input tsukes_on_conflict {
+  constraint: tsukes_constraint!
+  update_columns: [tsukes_update_column!]! = []
+  where: tsukes_bool_exp
+}
+
+"""Ordering options when selecting data from "tsukes"."""
+input tsukes_order_by {
+  amount: order_by
+  date: order_by
+  description: order_by
+  from_user: users_order_by
+  from_user_id: order_by
+  id: order_by
+  to_user: users_order_by
+  to_user_id: order_by
+}
+
+"""primary key columns input for table: tsukes"""
+input tsukes_pk_columns_input {
+  id: Int!
+}
+
+"""
+select columns of table "tsukes"
+"""
+enum tsukes_select_column {
+  """column name"""
+  amount
+
+  """column name"""
+  date
+
+  """column name"""
+  description
+
+  """column name"""
+  from_user_id
+
+  """column name"""
+  id
+
+  """column name"""
+  to_user_id
+}
+
+"""
+input type for updating data in table "tsukes"
+"""
+input tsukes_set_input {
+  amount: Int
+  date: date
+  description: String
+  from_user_id: Int
+  id: Int
+  to_user_id: Int
+}
+
+"""aggregate stddev on columns"""
+type tsukes_stddev_fields {
+  amount: Float
+  from_user_id: Float
+  id: Float
+  to_user_id: Float
+}
+
+"""aggregate stddev_pop on columns"""
+type tsukes_stddev_pop_fields {
+  amount: Float
+  from_user_id: Float
+  id: Float
+  to_user_id: Float
+}
+
+"""aggregate stddev_samp on columns"""
+type tsukes_stddev_samp_fields {
+  amount: Float
+  from_user_id: Float
+  id: Float
+  to_user_id: Float
+}
+
+"""aggregate sum on columns"""
+type tsukes_sum_fields {
+  amount: Int
+  from_user_id: Int
+  id: Int
+  to_user_id: Int
+}
+
+"""
+update columns of table "tsukes"
+"""
+enum tsukes_update_column {
+  """column name"""
+  amount
+
+  """column name"""
+  date
+
+  """column name"""
+  description
+
+  """column name"""
+  from_user_id
+
+  """column name"""
+  id
+
+  """column name"""
+  to_user_id
+}
+
+"""aggregate var_pop on columns"""
+type tsukes_var_pop_fields {
+  amount: Float
+  from_user_id: Float
+  id: Float
+  to_user_id: Float
+}
+
+"""aggregate var_samp on columns"""
+type tsukes_var_samp_fields {
+  amount: Float
+  from_user_id: Float
+  id: Float
+  to_user_id: Float
+}
+
+"""aggregate variance on columns"""
+type tsukes_variance_fields {
+  amount: Float
+  from_user_id: Float
+  id: Float
+  to_user_id: Float
+}
+
+"""
+columns and relationships of "users"
+"""
+type users {
+  id: Int!
+  name: String!
+  position: Int!
+  slack_id: String
+}
+
+"""
+aggregated selection of "users"
+"""
+type users_aggregate {
+  aggregate: users_aggregate_fields
+  nodes: [users!]!
+}
+
+"""
+aggregate fields of "users"
+"""
+type users_aggregate_fields {
+  avg: users_avg_fields
+  count(columns: [users_select_column!], distinct: Boolean): Int!
+  max: users_max_fields
+  min: users_min_fields
+  stddev: users_stddev_fields
+  stddev_pop: users_stddev_pop_fields
+  stddev_samp: users_stddev_samp_fields
+  sum: users_sum_fields
+  var_pop: users_var_pop_fields
+  var_samp: users_var_samp_fields
+  variance: users_variance_fields
+}
+
+"""aggregate avg on columns"""
+type users_avg_fields {
+  id: Float
+  position: Float
+}
+
+"""
+Boolean expression to filter rows from the table "users". All fields are combined with a logical 'AND'.
+"""
+input users_bool_exp {
+  _and: [users_bool_exp!]
+  _not: users_bool_exp
+  _or: [users_bool_exp!]
+  id: Int_comparison_exp
+  name: String_comparison_exp
+  position: Int_comparison_exp
+  slack_id: String_comparison_exp
+}
+
+"""
+unique or primary key constraints on table "users"
+"""
+enum users_constraint {
+  """unique or primary key constraint"""
+  users_name_key
+
+  """unique or primary key constraint"""
+  users_pk
+
+  """unique or primary key constraint"""
+  users_position_key
+}
+
+"""
+input type for incrementing numeric columns in table "users"
+"""
+input users_inc_input {
+  id: Int
+  position: Int
+}
+
+"""
+input type for inserting data into table "users"
+"""
+input users_insert_input {
+  id: Int
+  name: String
+  position: Int
+  slack_id: String
+}
+
+"""aggregate max on columns"""
+type users_max_fields {
+  id: Int
+  name: String
+  position: Int
+  slack_id: String
+}
+
+"""aggregate min on columns"""
+type users_min_fields {
+  id: Int
+  name: String
+  position: Int
+  slack_id: String
+}
+
+"""
+response of any mutation on the table "users"
+"""
+type users_mutation_response {
+  """number of rows affected by the mutation"""
+  affected_rows: Int!
+
+  """data from the rows affected by the mutation"""
+  returning: [users!]!
+}
+
+"""
+input type for inserting object relation for remote table "users"
+"""
+input users_obj_rel_insert_input {
+  data: users_insert_input!
+
+  """upsert condition"""
+  on_conflict: users_on_conflict
+}
+
+"""
+on_conflict condition type for table "users"
+"""
+input users_on_conflict {
+  constraint: users_constraint!
+  update_columns: [users_update_column!]! = []
+  where: users_bool_exp
+}
+
+"""Ordering options when selecting data from "users"."""
+input users_order_by {
+  id: order_by
+  name: order_by
+  position: order_by
+  slack_id: order_by
+}
+
+"""primary key columns input for table: users"""
+input users_pk_columns_input {
+  id: Int!
+}
+
+"""
+select columns of table "users"
+"""
+enum users_select_column {
+  """column name"""
+  id
+
+  """column name"""
+  name
+
+  """column name"""
+  position
+
+  """column name"""
+  slack_id
+}
+
+"""
+input type for updating data in table "users"
+"""
+input users_set_input {
+  id: Int
+  name: String
+  position: Int
+  slack_id: String
+}
+
+"""aggregate stddev on columns"""
+type users_stddev_fields {
+  id: Float
+  position: Float
+}
+
+"""aggregate stddev_pop on columns"""
+type users_stddev_pop_fields {
+  id: Float
+  position: Float
+}
+
+"""aggregate stddev_samp on columns"""
+type users_stddev_samp_fields {
+  id: Float
+  position: Float
+}
+
+"""aggregate sum on columns"""
+type users_sum_fields {
+  id: Int
+  position: Int
+}
+
+"""
+update columns of table "users"
+"""
+enum users_update_column {
+  """column name"""
+  id
+
+  """column name"""
+  name
+
+  """column name"""
+  position
+
+  """column name"""
+  slack_id
+}
+
+"""aggregate var_pop on columns"""
+type users_var_pop_fields {
+  id: Float
+  position: Float
+}
+
+"""aggregate var_samp on columns"""
+type users_var_samp_fields {
+  id: Float
+  position: Float
+}
+
+"""aggregate variance on columns"""
+type users_variance_fields {
+  id: Float
+  position: Float
+}
+

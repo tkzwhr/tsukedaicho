@@ -1,0 +1,8 @@
+query FetchUsers {
+    users {
+        id
+        name
+        slack_id
+        position
+    }
+}

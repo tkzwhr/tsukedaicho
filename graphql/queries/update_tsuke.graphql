@@ -1,0 +1,8 @@
+mutation UpdateTsuke($id: Int!, $date: date!, $fromUserId: Int!, $toUserId: Int!, $amount: Int!, $description: String!) {
+    update_tsukes_by_pk(
+        pk_columns: { id: $id }
+        _set: { date: $date, from_user_id: $fromUserId, to_user_id: $toUserId, amount: $amount, description: $description }
+    ) {
+        id
+    }
+}

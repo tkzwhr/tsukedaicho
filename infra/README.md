@@ -1,4 +1,4 @@
-infra
+hooks
 ===
 
 ## Requirements
@@ -13,8 +13,7 @@ infra
 $ docker-compose up -d
 ```
 
-Available to access Hasura console.
-Admin password is `hasura`.
+Available to access Hasura console. Admin password is `hasura`.
 
 - http://localhost:20080/
 - http://localhost:20081/ for testing
@@ -37,8 +36,7 @@ Apply changes to docker containers in order to refresh database.
 $ docker-compose down && docker-compose up -d
 ```
 
-Fix metadata on Hasura console.
-And re-export metadata using Hasura CLI.
+Fix metadata on Hasura console. And re-export metadata using Hasura CLI.
 
 ```shell
 $ cd hasura

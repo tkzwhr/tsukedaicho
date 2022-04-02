@@ -1,0 +1,22 @@
+query FetchTsukesAndUsers {
+    tsukes(order_by: { date: desc }) {
+        id
+        date
+        from_user {
+            id
+            name
+        }
+        to_user {
+            id
+            name
+        }
+        amount
+        description
+    }
+    users {
+        id
+        name
+        slack_id
+        position
+    }
+}
