@@ -5,6 +5,7 @@
       <module fileurl="file://$PROJECT_DIR$/admin/admin.iml" filepath="$PROJECT_DIR$/admin/admin.iml" />
       <module fileurl="file://$PROJECT_DIR$/graphql/graphql.iml" filepath="$PROJECT_DIR$/graphql/graphql.iml" />
       <module fileurl="file://$PROJECT_DIR$/infra/infra.iml" filepath="$PROJECT_DIR$/infra/infra.iml" />
+      <module fileurl="file://$PROJECT_DIR$/slack-api/slack-api.iml" filepath="$PROJECT_DIR$/slack-api/slack-api.iml" />
     </modules>
   </component>
 </project>
