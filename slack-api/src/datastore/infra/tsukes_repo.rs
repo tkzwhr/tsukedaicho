@@ -46,10 +46,10 @@ mod tests {
 
     use super::*;
 
-    const NUMBER_OF_PRESET: i64 = 3;
+    const NUMBER_OF_PRESET: usize = 3;
 
     fn find_dummy_tsuke(result: &Tsukes) -> Option<&Tsuke> {
-        result.0.iter().find(|v| v.id > NUMBER_OF_PRESET)
+        result.0.iter().find(|v| v.id > NUMBER_OF_PRESET as i64)
     }
 
     #[tokio::test]
@@ -61,13 +61,13 @@ mod tests {
         assert!(res.is_ok());
 
         let tsukes = res.unwrap();
-        assert_eq!(tsukes.0.len(), 3);
+        assert_eq!(tsukes.0.len(), NUMBER_OF_PRESET);
 
         let tsuke = tsukes.0.iter().find(|v| v.id == 1);
         assert!(tsuke.is_some());
 
         let tsuke = tsuke.unwrap();
-        assert_eq!(tsuke.date, NaiveDate::from_ymd(2021, 1, 1));
+        assert_eq!(tsuke.date, NaiveDate::from_ymd_opt(2021, 1, 1).unwrap());
         assert_eq!(tsuke.from_user.id, 1);
         assert_eq!(tsuke.from_user.name, String::from("user1"));
         assert_eq!(tsuke.to_user.id, 2);
@@ -82,7 +82,7 @@ mod tests {
         let repo = datastore::get_tsukes_repo().unwrap();
 
         let req = CreateTsukeRequest {
-            date: NaiveDate::from_ymd(2000, 1, 1),
+            date: NaiveDate::from_ymd_opt(2000, 1, 1).unwrap(),
             from_user_id: 1,
             to_user_id: 2,
             amount: 9999,
@@ -92,8 +92,9 @@ mod tests {
         assert!(res.is_ok());
 
         let tsukes = repo.fetch().await.unwrap();
+        assert_eq!(tsukes.0.len(), NUMBER_OF_PRESET + 1);
         let tsuke = find_dummy_tsuke(&tsukes).unwrap();
-        assert_eq!(tsuke.date, NaiveDate::from_ymd(2000, 1, 1));
+        assert_eq!(tsuke.date, NaiveDate::from_ymd_opt(2000, 1, 1).unwrap());
         assert_eq!(tsuke.from_user.id, 1);
         assert_eq!(tsuke.from_user.name, String::from("user1"));
         assert_eq!(tsuke.to_user.id, 2);
@@ -116,6 +117,7 @@ mod tests {
         assert!(res.is_ok());
 
         let tsukes = res.unwrap();
+        assert_eq!(tsukes.0.len(), NUMBER_OF_PRESET);
         let tsuke = find_dummy_tsuke(&tsukes);
         assert!(tsuke.is_none());
     }

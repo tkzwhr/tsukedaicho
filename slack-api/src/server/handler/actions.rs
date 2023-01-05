@@ -1,4 +1,4 @@
-use slack_morphism_models::{SlackActionId, SlackCallbackId};
+use slack_morphism::{SlackActionId, SlackCallbackId};
 
 const SLACK_CHANGE_USER: &str = "change_user";
 const SLACK_ACTIONS_REGISTER: &str = "register";
@@ -68,8 +68,8 @@ impl From<SlackActions> for SlackCallbackId {
 }
 
 impl From<SlackCallbackId> for SlackActions {
-    fn from(scid: SlackCallbackId) -> Self {
-        match scid.0.as_str() {
+    fn from(slack_callback_id: SlackCallbackId) -> Self {
+        match slack_callback_id.0.as_str() {
             SLACK_ACTIONS_REGISTER => SlackActions::Register,
             SLACK_ACTIONS_DELETE => SlackActions::Delete,
             _ => SlackActions::Unknown,

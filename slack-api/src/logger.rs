@@ -4,6 +4,7 @@ use crate::BoxedError;
 
 pub fn init() -> Result<(), BoxedError> {
     let colors_level = ColoredLevelConfig::new().info(Color::Blue);
+    let log_level = if cfg!(debug_assertions) { log::LevelFilter::Debug } else { log::LevelFilter::Info };
     fern::Dispatch::new()
         .format(move |out, message, record| {
             out.finish(format_args!(
@@ -18,12 +19,10 @@ pub fn init() -> Result<(), BoxedError> {
                 message
             ))
         })
-        .level(log::LevelFilter::Info)
+        .level(log_level)
         .level_for("slack_morphism", log::LevelFilter::Info)
-        .level_for("slack_morphism_hyper", log::LevelFilter::Info)
-        .level_for("hyper", log::LevelFilter::Info)
+        .level_for("axum", log::LevelFilter::Info)
         .level_for("rustls", log::LevelFilter::Info)
-        .level_for("hyper_rustls", log::LevelFilter::Info)
         .chain(std::io::stdout())
         .apply()?;
 

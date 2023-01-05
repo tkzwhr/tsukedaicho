@@ -1,11 +1,7 @@
 use std::sync::Arc;
 
-use hyper::service::{make_service_fn, service_fn};
 use log::*;
 use slack_morphism::prelude::*;
-use slack_morphism_hyper::{
-    chain_service_routes_fn, SlackClientEventsHyperListener, SlackClientHyperConnector,
-};
 
 mod server {
     pub use handler::*;
@@ -77,35 +73,35 @@ pub async fn serve() -> Result<(), BoxedError> {
     let addr = std::net::SocketAddr::from(([0, 0, 0, 0], 3000));
     info!("Loading server: {}", addr);
 
-    let event_config = Arc::new(SlackPushEventsListenerConfig::new(secrets::signing_secret()));
-    let interaction_config = Arc::new(SlackInteractionEventsListenerConfig::new(
-        secrets::signing_secret(),
-    ));
+    let client = Arc::new(SlackClient::new(SlackClientHyperConnector::new()));
+    let listener_environment: Arc<SlackHyperListenerEnvironment> = Arc::new(
+        SlackClientEventsListenerEnvironment::new(client.clone())
+            .with_error_handler(server::error_handler),
+    );
+    let listener = SlackEventsAxumListener::new(listener_environment.clone());
 
-    let connector = SlackClientHyperConnector::new();
-    let client = Arc::new(SlackClient::new(connector));
-    let environment = Arc::new(SlackClientEventsListenerEnvironment::new(client.clone()));
+    let app = axum::routing::Router::new()
+        .route(
+            "/push",
+            axum::routing::post(server::event).layer(
+                listener
+                    .events_layer(&secrets::signing_secret())
+                    .with_event_extractor(SlackEventsExtractors::push_event()),
+            ),
+        )
+        .route(
+            "/interaction",
+            axum::routing::post(server::interaction).layer(
+                listener
+                    .events_layer(&secrets::signing_secret())
+                    .with_event_extractor(SlackEventsExtractors::interaction_event()),
+            ),
+        );
 
-    let make_svc = make_service_fn(move |_| {
-        let listener = SlackClientEventsHyperListener::new(environment.clone());
-        let event_routes = listener.push_events_service_fn(event_config.clone(), server::event);
-        let interaction_routes =
-            listener.interaction_events_service_fn(interaction_config.clone(), server::interaction);
-
-        async move {
-            let routes = chain_service_routes_fn(
-                event_routes,
-                chain_service_routes_fn(interaction_routes, server::default),
-            );
-            Ok::<_, BoxedError>(service_fn(routes))
-        }
-    });
-
-    hyper::server::Server::bind(&addr)
-        .serve(make_svc)
+    axum::Server::bind(&addr)
+        .serve(app.into_make_service())
         .await
-        .map_err(|e| {
-            error!("Server error: {}", e);
-            e.into()
-        })
+        .unwrap();
+
+    Ok(())
 }

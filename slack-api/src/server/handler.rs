@@ -1,5 +1,7 @@
-use http::{Request, Response};
-use hyper::Body;
+use std::sync::Arc;
+
+use log::*;
+use slack_morphism::prelude::*;
 
 pub use actions::SlackActions;
 pub use event::handler as event;
@@ -11,8 +13,11 @@ mod actions;
 mod event;
 mod interaction;
 
-pub async fn default(_: Request<Body>) -> Result<Response<Body>, BoxedError> {
-    Response::builder()
-        .body("Tsukedaicho for Slack v1.0".into())
-        .map_err(|e| e.into())
+pub fn error_handler(
+    err: BoxedError,
+    _client: Arc<SlackHyperClient>,
+    _states: SlackClientEventsUserState,
+) -> http::StatusCode {
+    error!("{:#?}", err);
+    http::StatusCode::BAD_REQUEST
 }

@@ -10,7 +10,7 @@ fn generate_tsukes() -> Vec<Tsuke> {
     vec![
         Tsuke {
             id: 1,
-            date: NaiveDate::from_ymd(2001, 2, 3),
+            date: NaiveDate::from_ymd_opt(2001, 2, 3).unwrap(),
             from_user: PartOfUser { id: 1, name: "A".to_string() },
             to_user: PartOfUser { id: 2, name: "B".to_string() },
             amount: 100,
@@ -18,7 +18,7 @@ fn generate_tsukes() -> Vec<Tsuke> {
         },
         Tsuke {
             id: 2,
-            date: NaiveDate::from_ymd(2002, 3, 4),
+            date: NaiveDate::from_ymd_opt(2002, 3, 4).unwrap(),
             from_user: PartOfUser { id: 2, name: "B".to_string() },
             to_user: PartOfUser { id: 3, name: "CC".to_string() },
             amount: 200,

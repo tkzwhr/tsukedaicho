@@ -88,7 +88,7 @@ pub fn register_modal(users: &Users, target_user_id: i64) -> SlackView {
                 some_into(SlackInputBlock::new(
                     pt!(":calendar: 日付"),
                     SlackBlockDatePickerElement::new(SlackActions::RegDate.into(), pt!("日付"))
-                        .with_initial_date(Utc::today().format("%Y-%m-%d").to_string())
+                        .with_initial_date(Utc::now().format("%Y-%m-%d").to_string())
                         .into()
                 )),
                 some_into(SlackInputBlock::new(
