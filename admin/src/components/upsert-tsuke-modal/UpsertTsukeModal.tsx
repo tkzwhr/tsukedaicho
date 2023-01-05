@@ -1,11 +1,11 @@
-import UserSelector from "@/components/user-selector/UserSelector";
-import { CreateTsukeRequest, UpdateTsukeRequest } from "@/types/tsukes.request";
-import { Tsuke } from "@/types/tsukes.response";
-import { UsersResponse } from "@/types/users.response";
-import React, { useEffect, useState } from "react";
-import SemanticDatepicker from "react-semantic-ui-datepickers";
-import "react-semantic-ui-datepickers/dist/react-semantic-ui-datepickers.css";
-import { Button, Form, Icon, Message, Modal } from "semantic-ui-react";
+import UserSelector from '@/components/user-selector/UserSelector';
+import { CreateTsukeRequest, UpdateTsukeRequest } from '@/types/tsukes.request';
+import { Tsuke } from '@/types/tsukes.response';
+import { UsersResponse } from '@/types/users.response';
+import React, { useEffect, useState } from 'react';
+import SemanticDatepicker from 'react-semantic-ui-datepickers';
+import 'react-semantic-ui-datepickers/dist/react-semantic-ui-datepickers.css';
+import { Button, Form, Icon, Message, Modal } from 'semantic-ui-react';
 
 interface Props {
   open: boolean;
@@ -28,7 +28,7 @@ export default function UpsertTsukeModal({
   const [fromUserId, setFromUserId] = useState(-1);
   const [toUserId, setToUserId] = useState(-1);
   const [amount, setAmount] = useState(0);
-  const [description, setDescription] = useState("");
+  const [description, setDescription] = useState('');
 
   useEffect(() => {
     if (open) {
@@ -36,13 +36,13 @@ export default function UpsertTsukeModal({
       setFromUserId(tsuke?.fromUser.id ?? -1);
       setToUserId(tsuke?.toUser.id ?? -1);
       setAmount(tsuke?.amount ?? 0);
-      setDescription(tsuke?.description ?? "");
+      setDescription(tsuke?.description ?? '');
     }
   }, [open]);
 
   function upsert() {
     const tzDate = new Date(
-      date.valueOf() - date.getTimezoneOffset() * 60 * 1000
+      date.valueOf() - date.getTimezoneOffset() * 60 * 1000,
     );
     if (tsuke) {
       onUpdated &&
@@ -140,7 +140,7 @@ export default function UpsertTsukeModal({
       <Modal.Actions>
         <Button onClick={onClosed}>キャンセル</Button>
         <Button onClick={upsert} primary>
-          {tsuke ? "更新" : "追加"}
+          {tsuke ? '更新' : '追加'}
         </Button>
       </Modal.Actions>
     </Modal>

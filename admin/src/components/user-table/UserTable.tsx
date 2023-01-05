@@ -1,9 +1,9 @@
-import "./UserTable.scss";
-import UserTableRow from "@/components/user-table/UserTableRow";
-import { Direction } from "@/types/enums";
-import { User, UsersResponse } from "@/types/users.response";
-import React from "react";
-import { Icon, Loader, Message, Table } from "semantic-ui-react";
+import './UserTable.styl';
+import UserTableRow from '@/components/user-table/UserTableRow';
+import { Direction } from '@/types/enums';
+import { User, UsersResponse } from '@/types/users.response';
+import React from 'react';
+import { Icon, Loader, Message, Table } from 'semantic-ui-react';
 
 interface Props {
   loading: boolean;

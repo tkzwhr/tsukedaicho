@@ -1,10 +1,10 @@
-import createApolloClient from "@/apolloClientFactory";
-import { ApolloProvider } from "@apollo/client/react";
+import createApolloClient from '@/apolloClientFactory';
+import { ApolloProvider } from '@apollo/client/react';
 
 const apolloClient = createApolloClient(
-  "http://localhost:20081/v1/graphql",
-  "hasura",
-  false
+  'http://localhost:20081/v1/graphql',
+  'hasura',
+  false,
 );
 export const wrapper = ({ children }: { children: any }) => (
   <ApolloProvider client={apolloClient}>{children}</ApolloProvider>

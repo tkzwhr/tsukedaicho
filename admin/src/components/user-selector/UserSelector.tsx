@@ -1,6 +1,6 @@
-import { UsersResponse } from "@/types/users.response";
-import React, { useEffect, useState } from "react";
-import { Select } from "semantic-ui-react";
+import { UsersResponse } from '@/types/users.response';
+import React, { useEffect, useState } from 'react';
+import { Select } from 'semantic-ui-react';
 
 interface Props {
   users: UsersResponse;

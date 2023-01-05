@@ -1,6 +1,6 @@
-import { SummaryColumn, SummaryRow } from "@/types/summary";
-import React from "react";
-import { Icon, Table } from "semantic-ui-react";
+import { SummaryColumn, SummaryRow } from '@/types/summary';
+import React from 'react';
+import { Icon, Table } from 'semantic-ui-react';
 
 interface Props {
   summary: SummaryRow;

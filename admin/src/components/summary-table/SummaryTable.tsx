@@ -1,8 +1,8 @@
-import "./SummaryTable.scss";
-import SummaryTableRow from "@/components/summary-table/SummaryTableRow";
-import { TsukesResponse } from "@/types/tsukes.response";
-import React from "react";
-import { Icon, Loader, Message, Table } from "semantic-ui-react";
+import './SummaryTable.styl';
+import SummaryTableRow from '@/components/summary-table/SummaryTableRow';
+import { TsukesResponse } from '@/types/tsukes.response';
+import React from 'react';
+import { Icon, Loader, Message, Table } from 'semantic-ui-react';
 
 interface Props {
   loading: boolean;

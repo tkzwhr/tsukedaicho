@@ -1,16 +1,15 @@
-import ChangeUsersOrderQuery from "./queries/change_users_order.graphql";
-import CreateUserQuery from "./queries/create_user.graphql";
-import DeleteUserQuery from "./queries/delete_user.graphql";
-import FetchUsersQuery from "./queries/fetch_users.graphql";
-import UpdateUserQuery from "./queries/update_user.graphql";
-import { DeferredResponse } from "@/types/deferredResponse";
-import { CreateUserRequest, UpdateUserRequest } from "@/types/users.request";
-import { User, UsersResponse } from "@/types/users.response";
-import { useMutation, useQuery } from "@apollo/client";
-
+import ChangeUsersOrderQuery from '@/graphql/change_users_order.graphql?raw';
+import CreateUserQuery from '@/graphql/create_user.graphql?raw';
+import DeleteUserQuery from '@/graphql/delete_user.graphql?raw';
+import FetchUsersQuery from '@/graphql/fetch_users.graphql?raw';
+import UpdateUserQuery from '@/graphql/update_user.graphql?raw';
+import { DeferredResponse } from '@/types/deferredResponse';
+import { CreateUserRequest, UpdateUserRequest } from '@/types/users.request';
+import { User, UsersResponse } from '@/types/users.response';
+import { gql, useMutation, useQuery } from '@apollo/client';
 
 export function useFetch(): DeferredResponse<UsersResponse> {
-  const queryResult = useQuery(FetchUsersQuery);
+  const queryResult = useQuery(gql(FetchUsersQuery));
 
   if (queryResult.loading) {
     return {
@@ -36,7 +35,7 @@ export function useFetch(): DeferredResponse<UsersResponse> {
 }
 
 export function useCreate(): (param: CreateUserRequest) => Promise<void> {
-  const [fn] = useMutation(CreateUserQuery);
+  const [fn] = useMutation(gql(CreateUserQuery));
   return (param: CreateUserRequest) =>
     fn({
       variables: param,
@@ -47,7 +46,7 @@ export function useCreate(): (param: CreateUserRequest) => Promise<void> {
 }
 
 export function useUpdate(): (param: UpdateUserRequest) => Promise<void> {
-  const [fn] = useMutation(UpdateUserQuery);
+  const [fn] = useMutation(gql(UpdateUserQuery));
   return (param: UpdateUserRequest) =>
     fn({
       variables: param,
@@ -58,7 +57,7 @@ export function useUpdate(): (param: UpdateUserRequest) => Promise<void> {
 }
 
 export function useDelete(): (id: number) => Promise<void> {
-  const [fn] = useMutation(DeleteUserQuery);
+  const [fn] = useMutation(gql(DeleteUserQuery));
   return (id: number) =>
     fn({
       variables: { id },
@@ -70,9 +69,9 @@ export function useDelete(): (id: number) => Promise<void> {
 
 export function useChangeUsersOrder(): (
   upperId: number,
-  lowerId: number
+  lowerId: number,
 ) => Promise<void> {
-  const [fn] = useMutation(ChangeUsersOrderQuery);
+  const [fn] = useMutation(gql(ChangeUsersOrderQuery));
   return (upperId: number, lowerId: number) =>
     fn({
       variables: { upperId, lowerId },
@@ -82,7 +81,7 @@ export function useChangeUsersOrder(): (
     });
 }
 
-const FETCH_USERS_KEY = "FetchUsers";
+const FETCH_USERS_KEY = 'FetchUsers';
 
 export function mapUser(data: any): User {
   return {

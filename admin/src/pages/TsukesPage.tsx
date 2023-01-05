@@ -1,10 +1,10 @@
-import TsukeTable from "@/components/tsuke-table/TsukeTable";
-import UpsertTsukeModal from "@/components/upsert-tsuke-modal/UpsertTsukeModal";
-import { useCreate, useDelete, useFetch, useUpdate } from "@/hooks/tsukes";
-import { CreateTsukeRequest, UpdateTsukeRequest } from "@/types/tsukes.request";
-import { Tsuke } from "@/types/tsukes.response";
-import React, { useState } from "react";
-import { Button, Confirm, Container, Header, Icon } from "semantic-ui-react";
+import TsukeTable from '@/components/tsuke-table/TsukeTable';
+import UpsertTsukeModal from '@/components/upsert-tsuke-modal/UpsertTsukeModal';
+import { useCreate, useDelete, useFetch, useUpdate } from '@/hooks/tsukes';
+import { CreateTsukeRequest, UpdateTsukeRequest } from '@/types/tsukes.request';
+import { Tsuke } from '@/types/tsukes.response';
+import React, { useState } from 'react';
+import { Button, Confirm, Container, Header, Icon } from 'semantic-ui-react';
 
 export default function TsukesPage(): JSX.Element {
   const [upsertModalIsOpen, setUpsertModalIsOpen] = useState(false);

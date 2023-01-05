@@ -1,11 +1,11 @@
-import { ServerConnectionContext } from "@/components/server-connection-provider/ServerConnectionProvider";
-import React, { useContext, useState } from "react";
-import { Form, Button } from "semantic-ui-react";
+import { ServerConnectionContext } from '@/components/server-connection-provider/ServerConnectionProvider';
+import React, { useContext, useState } from 'react';
+import { Form, Button } from 'semantic-ui-react';
 
 export default function ServerConnectionSetting(): JSX.Element {
   const srvConnCtx = useContext(ServerConnectionContext);
-  const [endpoint, setEndpoint] = useState(srvConnCtx.endpoint ?? "");
-  const [secret, setSecret] = useState(srvConnCtx.secret ?? "");
+  const [endpoint, setEndpoint] = useState(srvConnCtx.endpoint ?? '');
+  const [secret, setSecret] = useState(srvConnCtx.secret ?? '');
 
   function updateServerConnection() {
     srvConnCtx.setEndpoint(endpoint);

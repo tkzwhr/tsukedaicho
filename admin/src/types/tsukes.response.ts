@@ -1,5 +1,5 @@
-import { SummaryRow } from "@/types/summary";
-import { UsersResponse } from "@/types/users.response";
+import { SummaryRow } from '@/types/summary';
+import { UsersResponse } from '@/types/users.response';
 
 export class TsukesResponse {
   tsukes: Tsuke[];

@@ -1,7 +1,7 @@
-import { Direction } from "@/types/enums";
-import { User } from "@/types/users.response";
-import React from "react";
-import { Dropdown, Table } from "semantic-ui-react";
+import { Direction } from '@/types/enums';
+import { User } from '@/types/users.response';
+import React from 'react';
+import { Dropdown, Table } from 'semantic-ui-react';
 
 interface Props {
   user: User;
@@ -23,7 +23,7 @@ export default function UserTableRow({
   return (
     <Table.Row>
       <Table.Cell>{user.name}</Table.Cell>
-      <Table.Cell>{user.slackId ?? "-"}</Table.Cell>
+      <Table.Cell>{user.slackId ?? '-'}</Table.Cell>
       <Table.Cell>
         <Dropdown className="icon" icon="ellipsis vertical" floating button>
           <Dropdown.Menu>
@@ -37,13 +37,13 @@ export default function UserTableRow({
               icon="sort up"
               text="上に移動"
               disabled={!canMoveUpward}
-              onClick={() => moveAction(user, "upward")}
+              onClick={() => moveAction(user, 'upward')}
             />
             <Dropdown.Item
               icon="sort down"
               text="下に移動"
               disabled={!canMoveDownward}
-              onClick={() => moveAction(user, "downward")}
+              onClick={() => moveAction(user, 'downward')}
             />
             <Dropdown.Divider />
             <Dropdown.Item

@@ -1,5 +1,5 @@
-import React from "react";
-import { useLocalStorage } from "react-use";
+import React from 'react';
+import { useLocalStorage } from 'react-use';
 
 type ContextValue = {
   endpoint: string | undefined;
@@ -9,11 +9,11 @@ type ContextValue = {
 };
 
 export const ServerConnectionContext = React.createContext<ContextValue>({
-  endpoint: "",
+  endpoint: '',
   setEndpoint: () => {
     return;
   },
-  secret: "",
+  secret: '',
   setSecret: () => {
     return;
   },
@@ -24,8 +24,8 @@ export default function ServerConnectionProvider({
 }: {
   children: React.ReactNode;
 }): JSX.Element {
-  const [endpoint, setEndpoint] = useLocalStorage("ENDPOINT", "");
-  const [secret, setSecret] = useLocalStorage("SECRET", "");
+  const [endpoint, setEndpoint] = useLocalStorage('ENDPOINT', '');
+  const [secret, setSecret] = useLocalStorage('SECRET', '');
 
   return (
     <ServerConnectionContext.Provider

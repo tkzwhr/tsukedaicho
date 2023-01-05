@@ -1,4 +1,4 @@
-type PageName = "top" | "users" | "summary" | "tsukes";
+type PageName = 'top' | 'users' | 'summary' | 'tsukes';
 
 export interface Page {
   name: PageName;
@@ -7,8 +7,8 @@ export interface Page {
 }
 
 export const PAGES: Page[] = [
-  { name: "top", label: "トップ", path: "/" },
-  { name: "users", label: "ユーザ", path: "/users" },
-  { name: "summary", label: "サマリ", path: "/summary" },
-  { name: "tsukes", label: "ツケ一覧", path: "/tsukes" },
+  { name: 'top', label: 'トップ', path: '/' },
+  { name: 'users', label: 'ユーザ', path: '/users' },
+  { name: 'summary', label: 'サマリ', path: '/summary' },
+  { name: 'tsukes', label: 'ツケ一覧', path: '/tsukes' },
 ];

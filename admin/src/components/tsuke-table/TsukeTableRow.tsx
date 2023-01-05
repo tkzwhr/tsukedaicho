@@ -1,7 +1,7 @@
-import { Tsuke } from "@/types/tsukes.response";
-import { format } from "date-fns";
-import React from "react";
-import { Dropdown, Icon, Table } from "semantic-ui-react";
+import { Tsuke } from '@/types/tsukes.response';
+import { format } from 'date-fns';
+import React from 'react';
+import { Dropdown, Icon, Table } from 'semantic-ui-react';
 
 interface Props {
   tsuke: Tsuke;
@@ -15,7 +15,7 @@ export default function TsukeTableRow({
   deleteAction,
 }: Props): JSX.Element {
   function toISODate(date: Date): string {
-    return format(date, "yyyy-MM-dd");
+    return format(date, 'yyyy-MM-dd');
   }
 
   return (

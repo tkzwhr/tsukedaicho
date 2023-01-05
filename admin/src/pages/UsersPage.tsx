@@ -1,17 +1,17 @@
-import UpsertUserModal from "@/components/upsert-user-modal/UpsertUserModal";
-import UserTable from "@/components/user-table/UserTable";
+import UpsertUserModal from '@/components/upsert-user-modal/UpsertUserModal';
+import UserTable from '@/components/user-table/UserTable';
 import {
   useChangeUsersOrder,
   useCreate,
   useDelete,
   useFetch,
   useUpdate,
-} from "@/hooks/users";
-import { Direction } from "@/types/enums";
-import { CreateUserRequest, UpdateUserRequest } from "@/types/users.request";
-import { User } from "@/types/users.response";
-import React, { useState } from "react";
-import { Button, Confirm, Container, Header, Icon } from "semantic-ui-react";
+} from '@/hooks/users';
+import { Direction } from '@/types/enums';
+import { CreateUserRequest, UpdateUserRequest } from '@/types/users.request';
+import { User } from '@/types/users.response';
+import React, { useState } from 'react';
+import { Button, Confirm, Container, Header, Icon } from 'semantic-ui-react';
 
 export default function UsersPage(): JSX.Element {
   const [upsertModalIsOpen, setUpsertModalIsOpen] = useState(false);
@@ -56,7 +56,7 @@ export default function UsersPage(): JSX.Element {
 
   async function execMove(user: User, direction: Direction) {
     switch (direction) {
-      case "upward": {
+      case 'upward': {
         const upperId = queryResult.data.upperUser(user.id)?.id;
         if (!upperId) {
           console.warn(`Upper user not found. userId=${user.id}`);
@@ -65,7 +65,7 @@ export default function UsersPage(): JSX.Element {
         await changeUsersOrder(upperId, user.id);
         break;
       }
-      case "downward": {
+      case 'downward': {
         const lowerId = queryResult.data.lowerUser(user.id)?.id;
         if (!lowerId) {
           console.warn(`Lower user not found. userId=${user.id}`);

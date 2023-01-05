@@ -1,7 +1,7 @@
-import { CreateUserRequest, UpdateUserRequest } from "@/types/users.request";
-import { User } from "@/types/users.response";
-import React, { useEffect, useState } from "react";
-import { Button, Form, Modal } from "semantic-ui-react";
+import { CreateUserRequest, UpdateUserRequest } from '@/types/users.request';
+import { User } from '@/types/users.response';
+import React, { useEffect, useState } from 'react';
+import { Button, Form, Modal } from 'semantic-ui-react';
 
 interface Props {
   open: boolean;
@@ -20,13 +20,13 @@ export default function UpsertUserModal({
   onUpdated,
   onClosed,
 }: Props): JSX.Element {
-  const [name, setName] = useState("");
-  const [slackId, setSlackId] = useState("");
+  const [name, setName] = useState('');
+  const [slackId, setSlackId] = useState('');
 
   useEffect(() => {
     if (open) {
-      setName(user?.name ?? "");
-      setSlackId(user?.slackId ?? "");
+      setName(user?.name ?? '');
+      setSlackId(user?.slackId ?? '');
     }
   }, [open]);
 
@@ -77,7 +77,7 @@ export default function UpsertUserModal({
       <Modal.Actions>
         <Button onClick={onClosed}>キャンセル</Button>
         <Button onClick={upsert} primary>
-          {user ? "更新" : "追加"}
+          {user ? '更新' : '追加'}
         </Button>
       </Modal.Actions>
     </Modal>
