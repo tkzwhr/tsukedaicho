@@ -1,11 +1,14 @@
-gql
+ツケ台帳 GraphQL
 ===
 
-## Update schema
+## 必要なソフトウェア
 
-Install npm `graphqurl`.
+- Node.js
+- graphqurl (npm)
 
-And Execute the following command:
+## スキーマの更新
+
+下記のコマンドを実行します。
 
 ```shell
 $ gq http://localhost:20080/v1/graphql -H "X-Hasura-Admin-Secret: hasura" --introspect > schema.graphql

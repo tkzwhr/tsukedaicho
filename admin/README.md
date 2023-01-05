@@ -1,7 +1,9 @@
-Tsukedaicho for admin
+ツケ台帳 管理画面
 ===
 
-## Installation
+## 導入
+
+下記コマンドで実行します。
 
 ```shell
 $ yarn install
