@@ -7,9 +7,11 @@ const SLACK_SIGNING_SECRET: &str = "SLACK_SIGNING_SECRET";
 const SLACK_BOT_TOKEN: &str = "SLACK_BOT_TOKEN";
 
 pub fn check_secrets() -> Result<(), String> {
-    let result = dotenv::dotenv();
-    if let Err(err) = result.as_ref() {
-        warn!("'.env' file not loaded. Err={:?}", err);
+    if cfg!(debug_assertions) {
+        let result = dotenv::dotenv();
+        if let Err(err) = result.as_ref() {
+            warn!("'.env' file not loaded. Err={:?}", err);
+        }
     }
 
     let _ = env(HASURA_URL)?;
