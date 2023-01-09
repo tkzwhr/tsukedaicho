@@ -35,7 +35,7 @@ fern = { version = "0.6", features = ["colored"] }
 dotenv = "0.15"
 
 # https://github.com/dragonflyoss/image-service/commit/81e3ce530963cc86f0ab0d1c8abbcbd6627c89d6
-#openssl = { version = "0.10.35", features = ["vendored"] }
+openssl = { version = "0.10.45", features = ["vendored"] }
 
 [dev-dependencies]
 axum-macros = "0.3"
