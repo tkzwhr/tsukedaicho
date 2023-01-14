@@ -1,12 +1,31 @@
-import ServerConnectionSetting from '@/components/server-connection-setting/ServerConnectionSetting';
-import React from 'react';
-import { Header } from 'semantic-ui-react';
+import ServerConnectionSetting from '@/components/presentational/ServerConnectionSetting';
+import {
+  ContextValues,
+  ServerConnectionContext,
+} from '@/providers/ServerConnectionProvider';
+import { message } from 'antd';
+import React, { useContext } from 'react';
 
 export default function TopPage(): JSX.Element {
+  const srvConnCtx = useContext(ServerConnectionContext);
+  const [messageApi, contextHolder] = message.useMessage();
+
+  const updateServerConnectionSetting = (values: ContextValues) => {
+    if (values.endpoint === undefined || values.secret === undefined) return;
+
+    srvConnCtx.setEndpoint(values.endpoint);
+    srvConnCtx.setSecret(values.secret);
+
+    messageApi.success('接続設定を更新しました。');
+  };
+
   return (
-    <div>
-      <Header as="h2">ツケ台帳 Admin</Header>
-      <ServerConnectionSetting />
-    </div>
+    <>
+      <ServerConnectionSetting
+        contextValue={srvConnCtx}
+        onUpdate={updateServerConnectionSetting}
+      />
+      {contextHolder}
+    </>
   );
 }

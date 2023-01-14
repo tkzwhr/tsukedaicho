@@ -3,7 +3,7 @@ version: '3.6'
 services:
   postgresql:
     container_name: postgresql
-    image: postgres:14-alpine
+    image: postgres:15-alpine
     ports:
       - "5432:5432"
     volumes:

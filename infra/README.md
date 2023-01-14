@@ -12,7 +12,7 @@
 Dockerを起動した状態でコンテナを立ち上げます。
 
 ```shell
-$ docker-compose up -d
+$ docker compose up -d
 ```
 
 Hasuraにアクセスできるようになります。管理パスワードに `hasura` を入れてログインします。

@@ -1,10 +1,10 @@
 import '@/App.styl';
 import Router from '@/Router';
 import createApolloClient from '@/apolloClientFactory';
+import Sidebar from '@/components/sidebar/Sidebar';
 import ServerConnectionProvider, {
   ServerConnectionContext,
-} from '@/components/server-connection-provider/ServerConnectionProvider';
-import Sidebar from '@/components/sidebar/Sidebar';
+} from '@/providers/ServerConnectionProvider';
 import { ApolloProvider } from '@apollo/client/react';
 import React from 'react';
 

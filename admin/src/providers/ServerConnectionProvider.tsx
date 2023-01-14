@@ -1,14 +1,17 @@
 import React from 'react';
 import { useLocalStorage } from 'react-use';
 
-type ContextValue = {
+export type ContextValues = {
   endpoint: string | undefined;
-  setEndpoint: (v: string) => void;
   secret: string | undefined;
+};
+
+type ContextProperties = ContextValues & {
+  setEndpoint: (v: string) => void;
   setSecret: (v: string) => void;
 };
 
-export const ServerConnectionContext = React.createContext<ContextValue>({
+export const ServerConnectionContext = React.createContext<ContextProperties>({
   endpoint: '',
   setEndpoint: () => {
     return;
