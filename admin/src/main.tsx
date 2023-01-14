@@ -1,55 +1,62 @@
 import './index.styl';
 import createApolloClient from '@/apolloClientFactory';
 // import SummaryPage from '@/pages/SummaryPage';
-import TopPage from '@/pages/TopPage';
+import TopPage from '@/pages/Top.page';
+// import TsukesPage from '@/pages/TsukesPage';
+import UsersPage from '@/pages/Users.page';
 import ServerConnectionProvider, {
   ServerConnectionContext,
 } from '@/providers/ServerConnectionProvider';
-// import TsukesPage from '@/pages/TsukesPage';
-// import UsersPage from '@/pages/UsersPage';
 import { ApolloProvider } from '@apollo/client/react';
 import { Typography, Layout, Menu, theme } from 'antd';
 import React from 'react';
 import ReactDOM from 'react-dom/client';
-import { createBrowserRouter, RouterProvider } from 'react-router-dom';
-import { useLocation } from 'react-use';
+import {
+  createBrowserRouter,
+  RouterProvider,
+  useLocation,
+  useNavigate,
+} from 'react-router-dom';
 
-const PAGES = [
+type PageKey = 'top' | 'users';
+
+const PAGES: { key: PageKey; path: string; name: string }[] = [
   {
+    key: 'top',
     path: '/',
     name: 'トップ',
-    element: <TopPage />,
   },
   // {
   //     path: '/summary',
   //     name: 'サマリ',
-  //     element: <SummaryPage />,
   // },
   // {
   //     path: '/tsukes',
   //     name: 'ツケ一覧',
-  //     element: <TsukesPage />,
   // },
-  // {
-  //     path: '/users',
-  //     name: 'ユーザー一覧'
-  //     element: <UsersPage />,
-  // },
+  {
+    key: 'users',
+    path: '/users',
+    name: 'ユーザー一覧',
+  },
 ];
+
 const MENUS = PAGES.map((p) => ({
   key: p.path,
   label: p.name,
 }));
 
-const router = createBrowserRouter(PAGES);
-
 function App({ children }: { children: React.ReactNode }) {
   const location = useLocation();
+  const navigate = useNavigate();
   const {
     token: { colorBgContainer },
   } = theme.useToken();
 
-  console.log(location.pathname);
+  const navigatePage = (a: any) => {
+    navigate(a.key, { replace: true });
+  };
+
   const selectedKeys = MENUS.filter((m) => m.key === location.pathname)?.map(
     (m) => m.key,
   );
@@ -64,8 +71,9 @@ function App({ children }: { children: React.ReactNode }) {
         <Menu
           theme="dark"
           mode="horizontal"
-          defaultSelectedKeys={selectedKeys}
           items={MENUS}
+          defaultSelectedKeys={selectedKeys}
+          onClick={navigatePage}
         />
       </Layout.Header>
       <Layout.Content className="content">
@@ -77,6 +85,39 @@ function App({ children }: { children: React.ReactNode }) {
   );
 }
 
+const PAGE_COMPONENTS = PAGES.map((p) => {
+  switch (p.key) {
+    case 'top':
+      return {
+        path: p.path,
+        element: (
+          <App>
+            <TopPage />
+          </App>
+        ),
+      };
+    // {
+    //     path: '/summary',
+    //     element: <SummaryPage />,
+    // },
+    // {
+    //     path: '/tsukes',
+    //     element: <TsukesPage />,
+    // },
+    case 'users':
+      return {
+        path: p.path,
+        element: (
+          <App>
+            <UsersPage />
+          </App>
+        ),
+      };
+  }
+});
+
+const router = createBrowserRouter(PAGE_COMPONENTS);
+
 ReactDOM.createRoot(document.getElementById('root') as HTMLElement).render(
   <ServerConnectionProvider>
     <ServerConnectionContext.Consumer>
@@ -84,9 +125,7 @@ ReactDOM.createRoot(document.getElementById('root') as HTMLElement).render(
         <ApolloProvider
           client={createApolloClient(srvConnCtx.endpoint, srvConnCtx.secret)}
         >
-          <App>
-            <RouterProvider router={router} />
-          </App>
+          <RouterProvider router={router} />
         </ApolloProvider>
       )}
     </ServerConnectionContext.Consumer>

@@ -1,7 +1,7 @@
 import { CreateUserRequest, UpdateUserRequest } from '@/types/users.request';
 import { User } from '@/types/users.response';
+import { Form, Input, Modal } from 'antd';
 import React, { useEffect, useState } from 'react';
-import { Button, Form, Modal } from 'semantic-ui-react';
 
 interface Props {
   open: boolean;
@@ -20,66 +20,66 @@ export default function UpsertUserModal({
   onUpdated,
   onClosed,
 }: Props): JSX.Element {
-  const [name, setName] = useState('');
-  const [slackId, setSlackId] = useState('');
+  const [form] = Form.useForm();
+  const [isValid, setIsValid] = useState(false);
 
   useEffect(() => {
-    if (open) {
-      setName(user?.name ?? '');
-      setSlackId(user?.slackId ?? '');
-    }
+    if (!open) return;
+    setIsValid(false);
+    form.setFieldValue('name', user?.name);
+    form.setFieldValue('slackId', user?.slackId);
   }, [open]);
 
-  function upsert() {
+  const upsert = () => {
+    const name = form.getFieldValue('name');
+    const slackId = form.getFieldValue('slackId');
     if (user) {
       onUpdated &&
         onUpdated({
           id: user.id,
           name,
-          slackId: slackId.length > 0 ? slackId : null,
+          slackId: slackId?.length > 0 ? slackId : null,
           position: user.position,
         });
     } else {
       onCreated &&
         onCreated({
           name,
-          slackId: slackId.length > 0 ? slackId : null,
+          slackId: slackId?.length > 0 ? slackId : null,
           position,
         });
     }
-  }
+  };
+
+  const validate = () => {
+    const hasError = form
+      .getFieldsError()
+      .some((item) => item.errors.length > 0);
+    setIsValid(!hasError);
+  };
 
   return (
     <Modal
       open={open}
-      closeOnDimmerClick={false}
-      closeOnEscape={true}
-      onClose={onClosed}
+      title={user ? `${user.name}の編集` : `ユーザの追加`}
+      cancelText="キャンセル"
+      onCancel={onClosed}
+      okText={user ? '更新' : '追加'}
+      okButtonProps={{ disabled: !isValid }}
+      onOk={upsert}
     >
-      <Modal.Header>
-        {user ? `${user.name}の編集` : `ユーザの追加`}
-      </Modal.Header>
-      <Modal.Content>
-        <Form>
-          <Form.Field required={true}>
-            <label>名前</label>
-            <input value={name} onChange={(e) => setName(e.target.value)} />
-          </Form.Field>
-          <Form.Field>
-            <label>Slack ID</label>
-            <input
-              value={slackId}
-              onChange={(e) => setSlackId(e.target.value)}
-            />
-          </Form.Field>
-        </Form>
-      </Modal.Content>
-      <Modal.Actions>
-        <Button onClick={onClosed}>キャンセル</Button>
-        <Button onClick={upsert} primary>
-          {user ? '更新' : '追加'}
-        </Button>
-      </Modal.Actions>
+      <Form form={form} layout="vertical" onFieldsChange={validate}>
+        <Form.Item
+          label="名前"
+          name="name"
+          rules={[{ required: true, message: '名前を入力してください' }]}
+        >
+          <Input />
+        </Form.Item>
+        <Form.Item label="Slack ID" name="slackId">
+          <Input />
+        </Form.Item>
+      </Form>
     </Modal>
   );
 }

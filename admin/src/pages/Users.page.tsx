@@ -1,5 +1,5 @@
+import UserTable from '@/components/presentational/UserTable';
 import UpsertUserModal from '@/components/upsert-user-modal/UpsertUserModal';
-import UserTable from '@/components/user-table/UserTable';
 import {
   useChangeUsersOrder,
   useCreate,
@@ -10,12 +10,12 @@ import {
 import { Direction } from '@/types/enums';
 import { CreateUserRequest, UpdateUserRequest } from '@/types/users.request';
 import { User } from '@/types/users.response';
+import { PlusOutlined } from '@ant-design/icons';
+import { FloatButton } from 'antd';
 import React, { useState } from 'react';
-import { Button, Confirm, Container, Header, Icon } from 'semantic-ui-react';
 
 export default function UsersPage(): JSX.Element {
   const [upsertModalIsOpen, setUpsertModalIsOpen] = useState(false);
-  const [deleteModalIsOpen, setDeleteModalIsOpen] = useState(false);
   const [user, setUser] = useState<User | undefined>(undefined);
 
   const queryResult = useFetch();
@@ -24,37 +24,31 @@ export default function UsersPage(): JSX.Element {
   const deleteUser = useDelete();
   const changeUsersOrder = useChangeUsersOrder();
 
-  function openCreateModal() {
+  const openCreateModal = () => {
     setUser(undefined);
     setUpsertModalIsOpen(true);
-  }
+  };
 
-  function openUpdateModal(user: User) {
+  const openUpdateModal = (user: User) => {
     setUser(user);
     setUpsertModalIsOpen(true);
-  }
+  };
 
-  function openDeleteModal(user: User) {
-    setUser(user);
-    setDeleteModalIsOpen(true);
-  }
-
-  async function execCreate(param: CreateUserRequest) {
+  const execCreate = async (param: CreateUserRequest) => {
     await createUser(param);
     setUpsertModalIsOpen(false);
-  }
+  };
 
-  async function execUpdate(param: UpdateUserRequest) {
+  const execUpdate = async (param: UpdateUserRequest) => {
     await updateUser(param);
     setUpsertModalIsOpen(false);
-  }
+  };
 
-  async function execDelete() {
+  const execDelete = async (user: User) => {
     await deleteUser(user?.id ?? 0);
-    setDeleteModalIsOpen(false);
-  }
+  };
 
-  async function execMove(user: User, direction: Direction) {
+  const execMove = async (user: User, direction: Direction) => {
     switch (direction) {
       case 'upward': {
         const upperId = queryResult.data.upperUser(user.id)?.id;
@@ -75,22 +69,15 @@ export default function UsersPage(): JSX.Element {
         break;
       }
     }
-  }
+  };
 
   return (
     <div>
-      <Header as="h2">ユーザ</Header>
-      <Container fluid textAlign="right">
-        <Button primary onClick={openCreateModal}>
-          <Icon name="add" />
-          追加
-        </Button>
-      </Container>
       <UserTable
         loading={queryResult.loading}
         users={queryResult.data}
         editAction={openUpdateModal}
-        deleteAction={openDeleteModal}
+        deleteAction={execDelete}
         moveAction={execMove}
       />
       <UpsertUserModal
@@ -101,13 +88,10 @@ export default function UsersPage(): JSX.Element {
         onUpdated={execUpdate}
         onClosed={() => setUpsertModalIsOpen(false)}
       />
-      <Confirm
-        open={deleteModalIsOpen}
-        content="本当に削除してもよろしいですか？この操作は取り消せません。"
-        cancelButton="キャンセル"
-        confirmButton={<Button negative>削除する</Button>}
-        onCancel={() => setDeleteModalIsOpen(false)}
-        onConfirm={execDelete}
+      <FloatButton
+        type="primary"
+        icon={<PlusOutlined />}
+        onClick={openCreateModal}
       />
     </div>
   );

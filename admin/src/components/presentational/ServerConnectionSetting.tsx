@@ -7,35 +7,44 @@ type Props = {
   onUpdate: (values: ContextValues) => void;
 };
 
-export default function ServerConnectionSetting(props: Props): JSX.Element {
+export default function ServerConnectionSetting({
+  contextValue,
+  onUpdate,
+}: Props): JSX.Element {
   const [form] = Form.useForm<ContextValues>();
   const [isValid, setIsValid] = useState(false);
 
+  useEffect(() => {
+    form.setFieldValue('endpoint', contextValue.endpoint);
+    form.setFieldValue('secret', contextValue.secret);
+  }, [contextValue]);
+
   const validate = () => {
     const hasChanged =
-      form.getFieldValue('endpoint') !== props.contextValue.endpoint ||
-      form.getFieldValue('secret') !== props.contextValue.secret;
+      form.getFieldValue('endpoint') !== contextValue.endpoint ||
+      form.getFieldValue('secret') !== contextValue.secret;
     const hasError = form
       .getFieldsError()
       .some((item) => item.errors.length > 0);
     setIsValid(hasChanged && !hasError);
   };
 
-  useEffect(validate, [props.contextValue]);
+  useEffect(validate, [contextValue]);
 
   return (
     <Form
       layout="vertical"
       form={form}
-      initialValues={props.contextValue}
       requiredMark={false}
       onFieldsChange={validate}
-      onFinish={props.onUpdate}
+      onFinish={onUpdate}
     >
       <Form.Item
         label="Hasura endpoint"
         name="endpoint"
-        rules={[{ required: true, message: 'Please input Hasura endpoint' }]}
+        rules={[
+          { required: true, message: 'Hasura endpointを入力してください' },
+        ]}
       >
         <Input type="text" />
       </Form.Item>
@@ -43,7 +52,7 @@ export default function ServerConnectionSetting(props: Props): JSX.Element {
         label="Hasura admin secret"
         name="secret"
         rules={[
-          { required: true, message: 'Please input Hasura admin secret' },
+          { required: true, message: 'Hasura admin secretを入力してください' },
         ]}
       >
         <Input type="text" />

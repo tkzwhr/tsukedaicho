@@ -10,9 +10,9 @@ function Router(props: Props): JSX.Element {
   function componentFactory(page: Page): () => Promise<any> {
     switch (page.name) {
       case 'top':
-        return () => import('./pages/TopPage');
+        return () => import('./pages/Top.page');
       case 'users':
-        return () => import('./pages/UsersPage');
+        return () => import('./pages/Users.page');
       case 'summary':
         return () => import('./pages/SummaryPage');
       case 'tsukes':
