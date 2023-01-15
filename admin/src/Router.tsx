@@ -16,7 +16,7 @@ function Router(props: Props): JSX.Element {
       case 'summary':
         return () => import('./pages/Summary.page');
       case 'tsukes':
-        return () => import('./pages/TsukesPage');
+        return () => import('./pages/Tsukes.page');
       default: {
         const _exhaustiveChecks: never = page.name;
         console.error(_exhaustiveChecks);

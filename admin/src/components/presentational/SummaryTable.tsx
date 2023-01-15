@@ -59,7 +59,6 @@ export default function SummaryTable({ loading, tsukes }: Props): JSX.Element {
     title: d.name,
     dataIndex: d.key,
     render: (value, record, j) => {
-      console.log(record);
       if (i === j) return <Typography.Text disabled>-</Typography.Text>;
 
       if (value === 0)

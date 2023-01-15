@@ -2,7 +2,7 @@ import './index.styl';
 import createApolloClient from '@/apolloClientFactory';
 import SummaryPage from '@/pages/Summary.page';
 import TopPage from '@/pages/Top.page';
-// import TsukesPage from '@/pages/TsukesPage';
+import TsukesPage from '@/pages/Tsukes.page';
 import UsersPage from '@/pages/Users.page';
 import ServerConnectionProvider, {
   ServerConnectionContext,
@@ -18,7 +18,7 @@ import {
   useNavigate,
 } from 'react-router-dom';
 
-type PageKey = 'summary' | 'settings' | 'users';
+type PageKey = 'summary' | 'tsukes' | 'settings' | 'users';
 
 const PAGES: { key: PageKey; path: string; name: string }[] = [
   {
@@ -26,10 +26,11 @@ const PAGES: { key: PageKey; path: string; name: string }[] = [
     path: '/',
     name: 'サマリ',
   },
-  // {
-  //     path: '/tsukes',
-  //     name: 'ツケ一覧',
-  // },
+  {
+    key: 'tsukes',
+    path: '/tsukes',
+    name: 'カレンダー',
+  },
   {
     key: 'users',
     path: '/users',
@@ -97,6 +98,15 @@ const PAGE_COMPONENTS = PAGES.map((p) => {
           </App>
         ),
       };
+    case 'tsukes':
+      return {
+        path: p.path,
+        element: (
+          <App>
+            <TsukesPage />
+          </App>
+        ),
+      };
     case 'settings':
       return {
         path: p.path,
@@ -106,10 +116,6 @@ const PAGE_COMPONENTS = PAGES.map((p) => {
           </App>
         ),
       };
-    // {
-    //     path: '/tsukes',
-    //     element: <TsukesPage />,
-    // },
     case 'users':
       return {
         path: p.path,

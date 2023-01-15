@@ -1,15 +1,18 @@
-import TsukeTable from '@/components/tsuke-table/TsukeTable';
-import UpsertTsukeModal from '@/components/upsert-tsuke-modal/UpsertTsukeModal';
+import TsukeCalendar from '@/components/presentational/TsukeCalendar';
+import TsukeList from '@/components/presentational/TsukeList';
+import UpsertTsukeModal from '@/components/presentational/UpsertTsukeModal';
 import { useCreate, useDelete, useFetch, useUpdate } from '@/hooks/tsukes';
 import { CreateTsukeRequest, UpdateTsukeRequest } from '@/types/tsukes.request';
 import { Tsuke } from '@/types/tsukes.response';
+import { PlusOutlined } from '@ant-design/icons';
+import { Divider, FloatButton, Space } from 'antd';
+import { isSameDay } from 'date-fns';
 import React, { useState } from 'react';
-import { Button, Confirm, Container, Header, Icon } from 'semantic-ui-react';
 
 export default function TsukesPage(): JSX.Element {
   const [upsertModalIsOpen, setUpsertModalIsOpen] = useState(false);
-  const [deleteModalIsOpen, setDeleteModalIsOpen] = useState(false);
   const [tsuke, setTsuke] = useState<Tsuke | undefined>(undefined);
+  const [selectedDate, setSelectedDate] = useState<Date | undefined>(undefined);
 
   const queryResult = useFetch();
   const createTsuke = useCreate();
@@ -26,11 +29,6 @@ export default function TsukesPage(): JSX.Element {
     setUpsertModalIsOpen(true);
   }
 
-  function openDeleteModal(tsuke: Tsuke) {
-    setTsuke(tsuke);
-    setDeleteModalIsOpen(true);
-  }
-
   async function execCreate(param: CreateTsukeRequest) {
     await createTsuke(param);
     setUpsertModalIsOpen(false);
@@ -41,42 +39,43 @@ export default function TsukesPage(): JSX.Element {
     setUpsertModalIsOpen(false);
   }
 
-  async function execDelete() {
+  async function execDelete(tsuke: Tsuke) {
     await deleteTsuke(tsuke?.id ?? 0);
-    setDeleteModalIsOpen(false);
   }
 
+  const filteredTsuke = queryResult.data.all.filter(
+    (d) => selectedDate && isSameDay(selectedDate, d.date),
+  );
+
   return (
-    <div>
-      <Header as="h2">明細</Header>
-      <Container fluid textAlign="right">
-        <Button primary onClick={openCreateModal}>
-          <Icon name="add" />
-          追加
-        </Button>
-      </Container>
-      <TsukeTable
-        loading={queryResult.loading}
-        tsukes={queryResult.data}
-        editAction={openUpdateModal}
-        deleteAction={openDeleteModal}
-      />
+    <>
+      <Space align="start" size="large" split={<Divider type="vertical" />}>
+        <TsukeCalendar
+          loading={queryResult.loading}
+          tsukes={queryResult.data}
+          selectAction={setSelectedDate}
+        />
+        <TsukeList
+          date={selectedDate}
+          tsukes={filteredTsuke}
+          editAction={openUpdateModal}
+          deleteAction={execDelete}
+        />
+      </Space>
       <UpsertTsukeModal
         open={upsertModalIsOpen}
         tsuke={tsuke}
+        date={selectedDate}
         users={queryResult.data.users}
         onCreated={execCreate}
         onUpdated={execUpdate}
         onClosed={() => setUpsertModalIsOpen(false)}
       />
-      <Confirm
-        open={deleteModalIsOpen}
-        content="本当に削除してもよろしいですか？この操作は取り消せません。"
-        cancelButton="キャンセル"
-        confirmButton={<Button negative>削除する</Button>}
-        onCancel={() => setDeleteModalIsOpen(false)}
-        onConfirm={execDelete}
+      <FloatButton
+        type="primary"
+        icon={<PlusOutlined />}
+        onClick={openCreateModal}
       />
-    </div>
+    </>
   );
 }

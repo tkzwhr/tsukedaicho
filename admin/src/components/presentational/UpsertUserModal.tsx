@@ -66,7 +66,12 @@ export default function UpsertUserModal({
       onCancel={onClosed}
       okText={user ? '更新' : '追加'}
       okButtonProps={{ disabled: !isValid }}
-      onOk={upsert}
+      onOk={() =>
+        form
+          .validateFields()
+          .then(upsert)
+          .catch(() => {})
+      }
     >
       <Form form={form} layout="vertical" onFieldsChange={validate}>
         <Form.Item
