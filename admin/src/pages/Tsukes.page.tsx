@@ -1,6 +1,6 @@
-import TsukeCalendar from '@/components/presentational/TsukeCalendar';
-import TsukeList from '@/components/presentational/TsukeList';
-import UpsertTsukeModal from '@/components/presentational/UpsertTsukeModal';
+import TsukeCalendar from '@/components/TsukeCalendar';
+import TsukeList from '@/components/TsukeList';
+import UpsertTsukeModal from '@/components/UpsertTsukeModal';
 import { useCreate, useDelete, useFetch, useUpdate } from '@/hooks/tsukes';
 import { CreateTsukeRequest, UpdateTsukeRequest } from '@/types/tsukes.request';
 import { Tsuke } from '@/types/tsukes.response';

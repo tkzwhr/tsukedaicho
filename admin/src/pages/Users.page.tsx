@@ -1,5 +1,5 @@
-import UpsertUserModal from '@/components/presentational/UpsertUserModal';
-import UserTable from '@/components/presentational/UserTable';
+import UpsertUserModal from '@/components/UpsertUserModal';
+import UserTable from '@/components/UserTable';
 import {
   useChangeUsersOrder,
   useCreate,

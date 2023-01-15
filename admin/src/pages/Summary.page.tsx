@@ -1,4 +1,4 @@
-import SummaryTable from '@/components/presentational/SummaryTable';
+import SummaryTable from '@/components/SummaryTable';
 import { useFetch } from '@/hooks/tsukes';
 import React from 'react';
 

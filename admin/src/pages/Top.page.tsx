@@ -1,4 +1,4 @@
-import ServerConnectionSetting from '@/components/presentational/ServerConnectionSetting';
+import ServerConnectionSetting from '@/components/ServerConnectionSetting';
 import {
   ContextValues,
   ServerConnectionContext,
