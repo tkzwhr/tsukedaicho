@@ -1,4 +1,4 @@
-import UpsertUserModal from '@/components/UpsertUserModal';
+import UpsertUserModal from '@/components/UpsertUser.modal';
 import UserTable from '@/components/UserTable';
 import {
   useChangeUsersOrder,
