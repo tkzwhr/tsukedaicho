@@ -10,13 +10,13 @@ import { Button, Popconfirm, Space, Table } from 'antd';
 import { ColumnsType } from 'antd/es/table';
 import React from 'react';
 
-interface Props {
+type Props = {
   loading: boolean;
   users: UsersResponse;
   editAction: (user: User) => void;
   deleteAction: (user: User) => void;
   moveAction: (target: User, direction: Direction) => void;
-}
+};
 
 type DataType = {
   key: string;
@@ -33,18 +33,15 @@ const columns: ColumnsType<DataType> = [
   {
     title: '名前',
     dataIndex: 'name',
-    key: 'name',
   },
   {
     title: 'Slack ID',
     dataIndex: 'slackId',
-    key: 'slackId',
   },
   {
     title: 'Action',
     key: 'action',
-    fixed: 'right',
-    width: '200px',
+    align: 'right',
     render: (_: any, record: DataType) => (
       <Space wrap>
         <Button icon={<EditOutlined />} onClick={record.onEdit} />
@@ -73,19 +70,22 @@ const columns: ColumnsType<DataType> = [
   },
 ];
 
-export default function RecordTable({
+export default function UserTable({
   loading,
   users,
   editAction,
   deleteAction,
   moveAction,
 }: Props): JSX.Element {
-  if (loading) {
-    return <div>読み込み中...</div>;
-  }
-
-  if (!users.all) {
-    return <div>ユーザが見つかりません</div>;
+  if (loading || !users.all) {
+    return (
+      <Table
+        columns={columns}
+        loading={loading}
+        pagination={false}
+        size="small"
+      />
+    );
   }
 
   const data: DataType[] = users.all.map((u) => ({
@@ -99,5 +99,12 @@ export default function RecordTable({
     onDelete: () => deleteAction(u),
   }));
 
-  return <Table columns={columns} dataSource={data} pagination={false} />;
+  return (
+    <Table
+      columns={columns}
+      dataSource={data}
+      pagination={false}
+      size="small"
+    />
+  );
 }

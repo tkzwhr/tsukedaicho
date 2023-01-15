@@ -13,7 +13,7 @@ query FetchTsukesAndUsers {
         amount
         description
     }
-    users {
+    users(order_by: {position: asc}) {
         id
         name
         slack_id

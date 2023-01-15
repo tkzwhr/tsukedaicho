@@ -3,11 +3,11 @@ import { format } from 'date-fns';
 import React from 'react';
 import { Dropdown, Icon, Table } from 'semantic-ui-react';
 
-interface Props {
+type Props = {
   tsuke: Tsuke;
   editAction: (target: Tsuke) => void;
   deleteAction: (target: Tsuke) => void;
-}
+};
 
 export default function TsukeTableRow({
   tsuke,

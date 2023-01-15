@@ -3,14 +3,14 @@ import { User } from '@/types/users.response';
 import { Form, Input, Modal } from 'antd';
 import React, { useEffect, useState } from 'react';
 
-interface Props {
+type Props = {
   open: boolean;
   user?: User;
   position: number;
   onCreated?: (param: CreateUserRequest) => void;
   onUpdated?: (param: UpdateUserRequest) => void;
   onClosed?: () => void;
-}
+};
 
 export default function UpsertUserModal({
   open,

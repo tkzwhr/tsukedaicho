@@ -2,9 +2,9 @@ import { SummaryColumn, SummaryRow } from '@/types/summary';
 import React from 'react';
 import { Icon, Table } from 'semantic-ui-react';
 
-interface Props {
+type Props = {
   summary: SummaryRow;
-}
+};
 
 export default function SummaryTableRow({ summary }: Props): JSX.Element {
   function createCell(summaryColumn: SummaryColumn): JSX.Element {

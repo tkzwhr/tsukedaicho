@@ -1,6 +1,6 @@
 import './index.styl';
 import createApolloClient from '@/apolloClientFactory';
-// import SummaryPage from '@/pages/SummaryPage';
+import SummaryPage from '@/pages/Summary.page';
 import TopPage from '@/pages/Top.page';
 // import TsukesPage from '@/pages/TsukesPage';
 import UsersPage from '@/pages/Users.page';
@@ -18,18 +18,14 @@ import {
   useNavigate,
 } from 'react-router-dom';
 
-type PageKey = 'top' | 'users';
+type PageKey = 'summary' | 'settings' | 'users';
 
 const PAGES: { key: PageKey; path: string; name: string }[] = [
   {
-    key: 'top',
+    key: 'summary',
     path: '/',
-    name: 'トップ',
+    name: 'サマリ',
   },
-  // {
-  //     path: '/summary',
-  //     name: 'サマリ',
-  // },
   // {
   //     path: '/tsukes',
   //     name: 'ツケ一覧',
@@ -37,7 +33,12 @@ const PAGES: { key: PageKey; path: string; name: string }[] = [
   {
     key: 'users',
     path: '/users',
-    name: 'ユーザー一覧',
+    name: 'ユーザー',
+  },
+  {
+    key: 'settings',
+    path: '/settings',
+    name: '設定',
   },
 ];
 
@@ -87,7 +88,16 @@ function App({ children }: { children: React.ReactNode }) {
 
 const PAGE_COMPONENTS = PAGES.map((p) => {
   switch (p.key) {
-    case 'top':
+    case 'summary':
+      return {
+        path: p.path,
+        element: (
+          <App>
+            <SummaryPage />
+          </App>
+        ),
+      };
+    case 'settings':
       return {
         path: p.path,
         element: (
@@ -96,10 +106,6 @@ const PAGE_COMPONENTS = PAGES.map((p) => {
           </App>
         ),
       };
-    // {
-    //     path: '/summary',
-    //     element: <SummaryPage />,
-    // },
     // {
     //     path: '/tsukes',
     //     element: <TsukesPage />,

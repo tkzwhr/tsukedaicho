@@ -2,9 +2,9 @@ import { Page, PAGES } from '@/pages';
 import React, { Suspense } from 'react';
 import { BrowserRouter, Routes, Route } from 'react-router-dom';
 
-interface Props {
+type Props = {
   children: (contents: JSX.Element) => JSX.Element;
-}
+};
 
 function Router(props: Props): JSX.Element {
   function componentFactory(page: Page): () => Promise<any> {
@@ -14,7 +14,7 @@ function Router(props: Props): JSX.Element {
       case 'users':
         return () => import('./pages/Users.page');
       case 'summary':
-        return () => import('./pages/SummaryPage');
+        return () => import('./pages/Summary.page');
       case 'tsukes':
         return () => import('./pages/TsukesPage');
       default: {

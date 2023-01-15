@@ -7,14 +7,14 @@ import SemanticDatepicker from 'react-semantic-ui-datepickers';
 import 'react-semantic-ui-datepickers/dist/react-semantic-ui-datepickers.css';
 import { Button, Form, Icon, Message, Modal } from 'semantic-ui-react';
 
-interface Props {
+type Props = {
   open: boolean;
   tsuke?: Tsuke;
   users: UsersResponse;
   onCreated?: (param: CreateTsukeRequest) => void;
   onUpdated?: (param: UpdateTsukeRequest) => void;
   onClosed?: () => void;
-}
+};
 
 export default function UpsertTsukeModal({
   open,

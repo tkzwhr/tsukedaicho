@@ -1,5 +1,5 @@
+import UpsertUserModal from '@/components/presentational/UpsertUserModal';
 import UserTable from '@/components/presentational/UserTable';
-import UpsertUserModal from '@/components/upsert-user-modal/UpsertUserModal';
 import {
   useChangeUsersOrder,
   useCreate,
@@ -72,7 +72,7 @@ export default function UsersPage(): JSX.Element {
   };
 
   return (
-    <div>
+    <>
       <UserTable
         loading={queryResult.loading}
         users={queryResult.data}
@@ -93,6 +93,6 @@ export default function UsersPage(): JSX.Element {
         icon={<PlusOutlined />}
         onClick={openCreateModal}
       />
-    </div>
+    </>
   );
 }

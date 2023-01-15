@@ -4,12 +4,12 @@ import { Tsuke, TsukesResponse } from '@/types/tsukes.response';
 import React from 'react';
 import { Icon, Loader, Message, Table } from 'semantic-ui-react';
 
-interface Props {
+type Props = {
   loading: boolean;
   tsukes: TsukesResponse;
   editAction: (target: Tsuke) => void;
   deleteAction: (target: Tsuke) => void;
-}
+};
 
 export default function TsukeTable({
   loading,

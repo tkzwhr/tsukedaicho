@@ -2,11 +2,11 @@ import { UsersResponse } from '@/types/users.response';
 import React, { useEffect, useState } from 'react';
 import { Select } from 'semantic-ui-react';
 
-interface Props {
+type Props = {
   users: UsersResponse;
   initial: number;
   onChanged: (id: number) => void;
-}
+};
 
 export default function UserSelector({
   users,
