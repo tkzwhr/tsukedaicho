@@ -59,10 +59,12 @@ export default function TsukeCalendar({
     if (!item) return null;
     return item.map((v) => (
       <Space key={v.id}>
-        <Badge status="default" />
-        {v.fromUser.name}
-        <Typography.Text disabled>→</Typography.Text>
-        {v.toUser.name}
+        <Badge status="default"></Badge>
+        <span>
+          {v.fromUser.name.slice(0, 2)}
+          <Typography.Text disabled>→</Typography.Text>
+          {v.toUser.name.slice(0, 2)}
+        </span>
         <Typography.Text type="secondary">¥{v.amount}</Typography.Text>
       </Space>
     ));

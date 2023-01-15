@@ -12,7 +12,7 @@ import React, { useState } from 'react';
 export default function TsukesPage(): JSX.Element {
   const [upsertModalIsOpen, setUpsertModalIsOpen] = useState(false);
   const [tsuke, setTsuke] = useState<Tsuke | undefined>(undefined);
-  const [selectedDate, setSelectedDate] = useState<Date | undefined>(undefined);
+  const [selectedDate, setSelectedDate] = useState(new Date());
 
   const queryResult = useFetch();
   const createTsuke = useCreate();

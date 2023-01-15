@@ -5,7 +5,7 @@ import { format } from 'date-fns';
 import React from 'react';
 
 type Props = {
-  date?: Date;
+  date: Date;
   tsukes: Tsuke[];
   editAction: (target: Tsuke) => void;
   deleteAction: (target: Tsuke) => void;
@@ -23,10 +23,10 @@ export default function TsukeList({
       dataSource={tsukes}
       header={
         <Typography.Title level={5}>
-          {date && format(date, 'yyyy/M/d')}
+          {format(date, 'yyyy/M/d')}
         </Typography.Title>
       }
-      style={{ minWidth: '300px' }}
+      style={{ minWidth: '400px' }}
       renderItem={(item) => (
         <List.Item
           actions={[
