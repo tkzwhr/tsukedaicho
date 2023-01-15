@@ -1,16 +1,16 @@
 import ServerConnectionSetting from '@/components/ServerConnectionSetting';
 import {
-  ContextValues,
-  ServerConnectionContext,
-} from '@/providers/ServerConnectionProvider';
+  GraphQLServerConnection,
+  GraphQLServerConnectionContext,
+} from '@/providers/GraphQLServerConnectionProvider';
 import { message } from 'antd';
 import React, { useContext } from 'react';
 
 export default function TopPage(): JSX.Element {
-  const srvConnCtx = useContext(ServerConnectionContext);
+  const srvConnCtx = useContext(GraphQLServerConnectionContext);
   const [messageApi, contextHolder] = message.useMessage();
 
-  const updateServerConnectionSetting = (values: ContextValues) => {
+  const updateServerConnectionSetting = (values: GraphQLServerConnection) => {
     if (values.endpoint === undefined || values.secret === undefined) return;
 
     srvConnCtx.setEndpoint(values.endpoint);

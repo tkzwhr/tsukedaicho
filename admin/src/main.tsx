@@ -1,16 +1,12 @@
-import './index.styl';
-import createApolloClient from '@/apolloClientFactory';
+import './main.styl';
 import SummaryPage from '@/pages/Summary.page';
 import TopPage from '@/pages/Top.page';
 import TsukesPage from '@/pages/Tsukes.page';
 import UsersPage from '@/pages/Users.page';
-import ServerConnectionProvider, {
-  ServerConnectionContext,
-} from '@/providers/ServerConnectionProvider';
-import { ApolloProvider } from '@apollo/client/react';
+import GraphQLServerConnectionProvider from '@/providers/GraphQLServerConnectionProvider';
 import { Typography, Layout, Menu, theme } from 'antd';
 import React from 'react';
-import ReactDOM from 'react-dom/client';
+import { createRoot } from 'react-dom/client';
 import {
   createBrowserRouter,
   RouterProvider,
@@ -129,17 +125,10 @@ const PAGE_COMPONENTS = PAGES.map((p) => {
 });
 
 const router = createBrowserRouter(PAGE_COMPONENTS);
-
-ReactDOM.createRoot(document.getElementById('root') as HTMLElement).render(
-  <ServerConnectionProvider>
-    <ServerConnectionContext.Consumer>
-      {(srvConnCtx) => (
-        <ApolloProvider
-          client={createApolloClient(srvConnCtx.endpoint, srvConnCtx.secret)}
-        >
-          <RouterProvider router={router} />
-        </ApolloProvider>
-      )}
-    </ServerConnectionContext.Consumer>
-  </ServerConnectionProvider>,
+const rootContainer = document.getElementById('root');
+const root = createRoot(rootContainer!);
+root.render(
+  <GraphQLServerConnectionProvider>
+    <RouterProvider router={router} />
+  </GraphQLServerConnectionProvider>,
 );

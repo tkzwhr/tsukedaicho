@@ -1,4 +1,4 @@
-import createApolloClient from '@/apolloClientFactory';
+import { createApolloClient } from '@/providers/GraphQLServerConnectionProvider';
 import { ApolloProvider } from '@apollo/client/react';
 
 const apolloClient = createApolloClient(

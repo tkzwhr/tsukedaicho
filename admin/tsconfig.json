@@ -19,7 +19,8 @@
     "paths": {
       "@/graphql/*": ["../graphql/queries/*"],
       "@/*": ["src/*"]
-    }
+    },
+    "types": ["vitest/globals"]
   },
   "include": ["src"],
   "references": [{ "path": "./tsconfig.node.json" }]

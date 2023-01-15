@@ -1,17 +1,17 @@
-import { ContextValues } from '@/providers/ServerConnectionProvider';
+import { GraphQLServerConnection } from '@/providers/GraphQLServerConnectionProvider';
 import { Button, Form, Input } from 'antd';
 import React, { useEffect, useState } from 'react';
 
 type Props = {
-  contextValue: ContextValues;
-  onUpdate: (values: ContextValues) => void;
+  contextValue: GraphQLServerConnection;
+  onUpdate: (values: GraphQLServerConnection) => void;
 };
 
 export default function ServerConnectionSetting({
   contextValue,
   onUpdate,
 }: Props): JSX.Element {
-  const [form] = Form.useForm<ContextValues>();
+  const [form] = Form.useForm<GraphQLServerConnection>();
   const [isValid, setIsValid] = useState(false);
 
   useEffect(() => {
