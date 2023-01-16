@@ -43,7 +43,7 @@ const columns: ColumnsType<DataType> = [
     key: 'action',
     align: 'right',
     render: (_: any, record: DataType) => (
-      <Space wrap>
+      <Space.Compact>
         <Button icon={<EditOutlined />} onClick={record.onEdit} />
         <Button
           icon={<CaretUpOutlined />}
@@ -65,7 +65,7 @@ const columns: ColumnsType<DataType> = [
         >
           <Button danger icon={<DeleteOutlined />} />
         </Popconfirm>
-      </Space>
+      </Space.Compact>
     ),
   },
 ];
