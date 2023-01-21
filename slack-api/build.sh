@@ -1,7 +1,7 @@
 #!/bin/bash -e
 
 APP_NAME=tsukedaicho-slack-api
-VERSION=0.1.0
+VERSION=1.0.0
 
 if [ -z $HOME_REGISTRY ]; then
   echo "ERROR: HOME_REGISTRY not defined." 1>&2

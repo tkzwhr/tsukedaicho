@@ -1,5 +1,5 @@
-import { SummaryRow } from "@/types/summary";
-import { UsersResponse } from "@/types/users.response";
+import { SummaryRow } from '@/types/summary';
+import { UsersResponse } from '@/types/users.response';
 
 export class TsukesResponse {
   tsukes: Tsuke[];
@@ -35,11 +35,13 @@ export class TsukesResponse {
           .filter((r) => r.toUser.id === v.id && r.fromUser.id === u.id)
           .reduce((acc, v) => acc + v.amount, 0);
         return {
+          id: v.id,
           name: v.name,
           amount: lend - borrow,
         };
       });
       return {
+        id: u.id,
         name: u.name,
         columns,
       };

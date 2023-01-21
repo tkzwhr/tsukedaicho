@@ -1,9 +1,8 @@
 use std::collections::HashMap;
 
 use chrono::NaiveDate;
-use serde_json::Value;
-use slack_morphism_models::blocks::SlackStatefulStateParams;
-use slack_morphism_models::SlackActionId;
+use slack_morphism::blocks::{SlackStatefulStateParams, SlackViewStateValue};
+use slack_morphism::SlackActionId;
 
 use crate::server::SlackActions;
 
@@ -23,51 +22,36 @@ impl RegisterForm {
 }
 
 impl From<SlackStatefulStateParams> for RegisterForm {
-    fn from(sssp: SlackStatefulStateParams) -> Self {
-        let status = parse_view(sssp);
+    fn from(params: SlackStatefulStateParams) -> Self {
+        let status = parse_view(params);
 
         let from_id = status
-            .get(SlackActionId::from(SlackActions::RegFromUser).0.as_str())
-            .and_then(|x| x.as_object())
-            .and_then(|x| x.get("selected_option"))
-            .and_then(|x| x.as_object())
-            .and_then(|x| x.get("value"))
-            .and_then(|x| x.as_str())
-            .and_then(|x| x.parse::<i64>().ok())
+            .get(&SlackActionId::from(SlackActions::RegFromUser))
+            .and_then(|x| x.selected_option.clone())
+            .and_then(|x| x.value.parse::<i64>().ok())
             .unwrap();
 
         let to_id = status
-            .get(SlackActionId::from(SlackActions::RegToUser).0.as_str())
-            .and_then(|x| x.as_object())
-            .and_then(|x| x.get("selected_option"))
-            .and_then(|x| x.as_object())
-            .and_then(|x| x.get("value"))
-            .and_then(|x| x.as_str())
-            .and_then(|x| x.parse::<i64>().ok())
+            .get(&SlackActionId::from(SlackActions::RegToUser))
+            .and_then(|x| x.selected_option.clone())
+            .and_then(|x| x.value.parse::<i64>().ok())
             .unwrap();
 
         let date = status
-            .get(SlackActionId::from(SlackActions::RegDate).0.as_str())
-            .and_then(|x| x.as_object())
-            .and_then(|x| x.get("selected_date"))
-            .and_then(|x| x.as_str())
-            .and_then(|x| NaiveDate::parse_from_str(x, "%Y-%m-%d").ok())
+            .get(&SlackActionId::from(SlackActions::RegDate))
+            .and_then(|x| x.selected_date.clone())
+            .and_then(|x| NaiveDate::parse_from_str(x.as_str(), "%Y-%m-%d").ok())
             .unwrap();
 
         let amount = status
-            .get(SlackActionId::from(SlackActions::RegAmount).0.as_str())
-            .and_then(|x| x.as_object())
-            .and_then(|x| x.get("value"))
-            .and_then(|x| x.as_str())
+            .get(&SlackActionId::from(SlackActions::RegAmount))
+            .and_then(|x| x.value.clone())
             .and_then(|x| x.parse::<i64>().ok())
             .unwrap();
 
         let description = status
-            .get(SlackActionId::from(SlackActions::RegDesc).0.as_str())
-            .and_then(|x| x.as_object())
-            .and_then(|x| x.get("value"))
-            .and_then(|x| x.as_str())
-            .map(|x| x.to_string())
+            .get(&SlackActionId::from(SlackActions::RegDesc))
+            .and_then(|x| x.value.clone())
             .unwrap();
 
         RegisterForm {
@@ -86,36 +70,27 @@ pub struct DeleteForm {
 }
 
 impl From<SlackStatefulStateParams> for DeleteForm {
-    fn from(sssp: SlackStatefulStateParams) -> Self {
-        let status = parse_view(sssp);
+    fn from(params: SlackStatefulStateParams) -> Self {
+        let status = parse_view(params);
 
         let tsuke_id = status
-            .get(SlackActionId::from(SlackActions::DelTsukeId).0.as_str())
-            .and_then(|x| x.as_object())
-            .and_then(|x| x.get("selected_option"))
-            .and_then(|x| x.as_object())
-            .and_then(|x| x.get("value"))
-            .and_then(|x| x.as_str())
-            .and_then(|x| x.parse::<i64>().ok())
+            .get(&SlackActionId::from(SlackActions::DelTsukeId))
+            .and_then(|x| x.selected_option.clone())
+            .and_then(|x| x.value.parse::<i64>().ok())
             .unwrap();
 
         DeleteForm { tsuke_id }
     }
 }
 
-fn parse_view(sssp: SlackStatefulStateParams) -> HashMap<String, Value> {
-    let mut status: HashMap<String, Value> = HashMap::new();
-
-    if let Some(state) = sssp.state {
-        let values = state
-            .values
-            .values()
-            .flat_map(|x| x.as_object())
-            .flat_map(|x| x);
-        for (k, v) in values {
-            status.insert(k.to_string(), v.clone());
+fn parse_view(params: SlackStatefulStateParams) -> HashMap<SlackActionId, SlackViewStateValue> {
+    let mut collected = HashMap::<SlackActionId, SlackViewStateValue>::new();
+    if let Some(state) = params.state {
+        for values in state.values.into_values() {
+            for (k, v) in values {
+                collected.insert(k, v);
+            }
         }
     }
-
-    status
+    collected
 }

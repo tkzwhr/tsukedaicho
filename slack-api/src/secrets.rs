@@ -1,5 +1,5 @@
 use log::*;
-use slack_morphism::SlackApiToken;
+use slack_morphism::{SlackApiToken, SlackSigningSecret};
 
 const HASURA_URL: &str = "HASURA_URL";
 const HASURA_SECRET: &str = "HASURA_SECRET";
@@ -7,9 +7,11 @@ const SLACK_SIGNING_SECRET: &str = "SLACK_SIGNING_SECRET";
 const SLACK_BOT_TOKEN: &str = "SLACK_BOT_TOKEN";
 
 pub fn check_secrets() -> Result<(), String> {
-    let result = dotenv::dotenv();
-    if let Err(err) = result.as_ref() {
-        warn!("'.env' file not loaded. Err={:?}", err);
+    if cfg!(debug_assertions) {
+        let result = dotenv::dotenv();
+        if let Err(err) = result.as_ref() {
+            warn!("'.env' file not loaded. Err={:?}", err);
+        }
     }
 
     let _ = env(HASURA_URL)?;
@@ -28,8 +30,9 @@ pub fn hasura_secret() -> String {
     env(HASURA_SECRET).unwrap()
 }
 
-pub fn signing_secret() -> String {
-    env(SLACK_SIGNING_SECRET).unwrap()
+pub fn signing_secret() -> SlackSigningSecret {
+    let signing_secret = env(SLACK_SIGNING_SECRET).unwrap();
+    SlackSigningSecret::new(signing_secret)
 }
 
 pub fn api_token() -> SlackApiToken {

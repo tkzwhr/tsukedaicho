@@ -1,22 +1,25 @@
-use std::fmt::Error;
 use std::sync::Arc;
 
+use axum::Extension;
+use axum::response::Response;
+use http::header::CONTENT_TYPE;
+use http::StatusCode;
+use hyper::Body;
 use log::*;
 use slack_morphism::prelude::*;
-use slack_morphism_hyper::{SlackClientHyperHttpsConnector, SlackHyperClient};
 
 use crate::{datastore, secrets};
-use crate::BoxedError;
 use crate::datastore::CreateTsukeRequest;
 use crate::server::forms::{DeleteForm, RegisterForm};
 use crate::server::SlackActions;
 use crate::server::views;
 
 pub async fn handler(
-    event: SlackInteractionEvent,
-    client: Arc<SlackHyperClient>,
-    _states: Arc<SlackClientEventsUserState>,
-) -> Result<(), BoxedError> {
+    Extension(environment): Extension<Arc<SlackHyperListenerEnvironment>>,
+    Extension(event): Extension<SlackInteractionEvent>,
+) -> Result<Response<Body>, StatusCode> {
+    debug!("interaction requested");
+
     match &event {
         SlackInteractionEvent::ViewSubmission(vs) => {
             let event = SlackInteractionViewSubmissionEventWrapper(vs);
@@ -27,7 +30,8 @@ pub async fn handler(
                         SlackActions::Register => {
                             let form = RegisterForm::from(event.state_params());
                             if !form.is_valid() {
-                                return Err(Box::new(Error));
+                                warn!("form is invalid: {:?}", form);
+                                return Err(StatusCode::BAD_REQUEST);
                             }
                         }
                         _ => {}
@@ -41,7 +45,7 @@ pub async fn handler(
 
     tokio::spawn(async move {
         let token = secrets::api_token();
-        let session = client.open_session(&token);
+        let session = environment.client.open_session(&token);
 
         match event {
             SlackInteractionEvent::BlockActions(ba) => {
@@ -59,7 +63,12 @@ pub async fn handler(
         }
     });
 
-    Ok(())
+    Ok(
+        Response::builder()
+            .header(CONTENT_TYPE, "text/plain")
+            .body(Body::empty())
+            .unwrap()
+    )
 }
 
 async fn block_actions(

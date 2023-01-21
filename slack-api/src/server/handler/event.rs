@@ -1,22 +1,34 @@
 use std::sync::Arc;
 
+use axum::Extension;
+use axum::response::Response;
+use http::header::CONTENT_TYPE;
+use hyper::Body;
 use log::*;
 use slack_morphism::api::SlackApiViewsPublishRequest;
 use slack_morphism::prelude::*;
-use slack_morphism_hyper::{SlackClientHyperHttpsConnector, SlackHyperClient};
 
 use crate::{datastore, secrets};
-use crate::BoxedError;
 use crate::server::views;
 
 pub async fn handler(
-    event: SlackPushEvent,
-    client: Arc<SlackHyperClient>,
-    _states: Arc<SlackClientEventsUserState>,
-) -> Result<(), BoxedError> {
+    Extension(environment): Extension<Arc<SlackHyperListenerEnvironment>>,
+    Extension(event): Extension<SlackPushEvent>,
+) -> Response<Body> {
+    debug!("push requested");
+
+    let response_builder = Response::builder()
+        .header(CONTENT_TYPE, "text/plain");
+    let response = match &event {
+        SlackPushEvent::UrlVerification(url_verification) => {
+            response_builder.body(Body::from(url_verification.challenge.clone())).unwrap()
+        },
+        _ => response_builder.body(Body::empty()).unwrap(),
+    };
+
     tokio::spawn(async move {
         let token = secrets::api_token();
-        let session = client.open_session(&token);
+        let session = environment.client.open_session(&token);
 
         match event {
             SlackPushEvent::UrlVerification(_) => {}
@@ -28,12 +40,13 @@ pub async fn handler(
                 SlackEventCallbackBody::AppMention(_) => {}
                 SlackEventCallbackBody::AppUninstalled(_) => {}
                 SlackEventCallbackBody::LinkShared(_) => {}
+                SlackEventCallbackBody::EmojiChanged(_) => {}
             },
             SlackPushEvent::AppRateLimited(_) => {}
         }
     });
 
-    Ok(())
+    response
 }
 
 async fn app_home_opened(

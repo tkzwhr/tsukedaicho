@@ -1,4 +1,4 @@
-use slack_morphism_models::SlackUser;
+use slack_morphism::SlackUser;
 
 use crate::types::{SlackUserData, Tsukes, User, Users};
 
