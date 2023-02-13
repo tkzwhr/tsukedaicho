@@ -26,23 +26,27 @@ export class TsukesResponse {
       return [];
     }
 
-    return this.users.all.map((u) => {
-      const columns = this.users.all.map((v) => {
+    return this.users.all.map((user) => {
+      const columns = this.users.all.map((opponentUser) => {
         const lend = this.all
-          .filter((r) => r.toUser.id === u.id && r.fromUser.id === v.id)
+          .filter(
+            (r) => r.fromUser.id === user.id && r.toUser.id === opponentUser.id,
+          )
           .reduce((acc, v) => acc + v.amount, 0);
         const borrow = this.all
-          .filter((r) => r.toUser.id === v.id && r.fromUser.id === u.id)
+          .filter(
+            (r) => r.toUser.id === user.id && r.fromUser.id === opponentUser.id,
+          )
           .reduce((acc, v) => acc + v.amount, 0);
         return {
-          id: v.id,
-          name: v.name,
+          id: opponentUser.id,
+          name: opponentUser.name,
           amount: lend - borrow,
         };
       });
       return {
-        id: u.id,
-        name: u.name,
+        id: user.id,
+        name: user.name,
         columns,
       };
     });

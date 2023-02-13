@@ -56,7 +56,12 @@ export default function TsukeList({
                 <Typography.Text>{item.toUser.name}</Typography.Text>
               </Space>
             }
-            description={`${item.amount}円`}
+            description={
+              <p>
+                {item.amount}円<br />
+                {item.description}
+              </p>
+            }
           />
         </List.Item>
       )}
