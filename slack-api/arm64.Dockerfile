@@ -5,6 +5,7 @@ WORKDIR /app
 RUN rustup target add aarch64-unknown-linux-musl
 
 COPY slack-api/Cargo.toml ./slack-api/Cargo.toml
+COPY slack-api/Cargo.lock ./slack-api/Cargo.lock
 COPY slack-api/.cargo ./slack-api/.cargo
 COPY slack-api/src ./slack-api/src
 COPY graphql ./graphql
