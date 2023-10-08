@@ -6,6 +6,7 @@ use http::header::CONTENT_TYPE;
 use http::StatusCode;
 use hyper::Body;
 use log::*;
+use slack_morphism::errors::SlackClientError;
 use slack_morphism::prelude::*;
 
 use crate::{datastore, secrets};
@@ -127,13 +128,13 @@ async fn open_register_modal(
 ) {
     let repo = datastore::get_users_repo().unwrap();
 
-    let data_res = repo.fetch().await;
-    if let Err(err) = data_res.as_ref() {
-        error!("[Datastore] Failed to fetch users. Err={:#?}", err);
-        return;
-    }
-
-    let users = data_res.unwrap();
+    let users = match repo.fetch().await {
+        Ok(data) => data,
+        Err(err) => {
+            error!("[Datastore] Failed to fetch users. Err={:#?}", err);
+            return;
+        }
+    };
 
     let view = views::register_modal(&users, target_user_id);
     let open_view_req = SlackApiViewsOpenRequest::new(trigger_id, view);
@@ -150,20 +151,30 @@ async fn open_delete_modal(
 ) {
     let repo = datastore::get_tsukes_repo().unwrap();
 
-    let data_res = repo.fetch().await;
-    if let Err(err) = data_res.as_ref() {
-        error!("[Datastore] Failed to fetch tsukes and users. Err={:#?}", err);
-        return;
-    }
+    let tsukes = match repo.fetch().await {
+        Ok(data) => data,
+        Err(err) => {
+            error!("[Datastore] Failed to fetch tsukes and users. Err={:#?}", err);
+            return;
+        }
+    };
 
     let slack_users_req = SlackApiUsersListRequest::new();
     let slack_users_res = session.users_list(&slack_users_req).await;
-    if let Err(err) = slack_users_res.as_ref() {
-        error!("[Slack API] Failed to fetch users. Err={:#?}", err);
-        return;
-    }
 
-    let tsukes = data_res.unwrap().into_slack_data(slack_users_res.unwrap().members.as_slice());
+    let tsukes = match slack_users_res.as_ref() {
+        Ok(data) => tsukes.into_slack_data(data.members.as_slice()),
+        Err(err) => match err {
+            SlackClientError::RateLimitError(_) => {
+                warn!("[Slack API] Failed to fetch users. Err={:#?}", err);
+                tsukes
+            }
+            _ => {
+                error!("[Slack API] Failed to fetch users. Err={:#?}", err);
+                return;
+            }
+        }
+    };
 
     let view = views::delete_modal(&tsukes, target_user_id);
     let open_view_req = SlackApiViewsOpenRequest::new(trigger_id, view);
@@ -180,20 +191,30 @@ async fn refresh_home_view(
 ) {
     let repo = datastore::get_tsukes_repo().unwrap();
 
-    let data_res = repo.fetch().await;
-    if let Err(err) = data_res.as_ref() {
-        error!("[Datastore] Failed to fetch tsukes and users. Err={:#?}", &err);
-        return;
-    }
+    let tsukes = match repo.fetch().await {
+        Ok(data) => data,
+        Err(err) => {
+            error!("[Datastore] Failed to fetch tsukes and users. Err={:#?}", &err);
+            return;
+        }
+    };
 
     let slack_users_req = SlackApiUsersListRequest::new();
     let slack_users_res = session.users_list(&slack_users_req).await;
-    if let Err(err) = slack_users_res.as_ref() {
-        error!("[Slack API] Failed to fetch users. Err={:#?}", err);
-        return;
-    }
 
-    let tsukes = data_res.unwrap().into_slack_data(slack_users_res.unwrap().members.as_slice());
+    let tsukes = match slack_users_res.as_ref() {
+        Ok(data) => tsukes.into_slack_data(data.members.as_slice()),
+        Err(err) => match err {
+            SlackClientError::RateLimitError(_) => {
+                warn!("[Slack API] Failed to fetch users. Err={:#?}", err);
+                tsukes
+            }
+            _ => {
+                error!("[Slack API] Failed to fetch users. Err={:#?}", err);
+                return;
+            }
+        }
+    };
 
     let view = views::home_view_by_id(&tsukes, target_user_id.clone());
     let publish_view_req = SlackApiViewsPublishRequest::new(user_slack_id, view);
@@ -218,11 +239,13 @@ async fn create_tsuke(
         amount: form.amount,
         description: form.description.clone(),
     };
-    let data_res = repo.create(tsuke).await;
-    if let Err(err) = data_res.as_ref() {
-        error!("[Datastore] Failed to create the tsuke. Err={:#?}", &err);
-        return;
-    }
+    match repo.create(tsuke).await {
+        Ok(_) => (),
+        Err(err) => {
+            error!("[Datastore] Failed to create the tsuke. Err={:#?}", &err);
+            return;
+        }
+    };
 
     refresh_home_view(session, user_slack_id, target_user_id).await;
 }
@@ -235,11 +258,13 @@ async fn delete_tsuke(
 ) {
     let repo = datastore::get_tsukes_repo().unwrap();
 
-    let data_res = repo.delete(form.tsuke_id).await;
-    if let Err(err) = data_res.as_ref() {
-        error!("[Datastore] Failed to delete the tsuke. Err={:#?}", &err);
-        return;
-    }
+    match repo.delete(form.tsuke_id).await {
+        Ok(_) => (),
+        Err(err) => {
+            error!("[Datastore] Failed to delete the tsuke. Err={:#?}", &err);
+            return;
+        }
+    };
 
     refresh_home_view(session, user_slack_id, target_user_id).await;
 }
